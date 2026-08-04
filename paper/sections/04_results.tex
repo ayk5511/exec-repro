@@ -177,11 +177,31 @@ property of the literature rather than of the particular papers first drawn.
 \subsection{Rung 10}\label{sec:rung10_results}
 
 Seven repositories produced output and are therefore eligible for the final rung,
-which asks whether an emitted number matches a headline number in the paper. Seven
-is too few to support a rate, and we report no percentage for rung 10. The
-worksheet pairing each artefact's captured stdout with its paper's numeric claims
-is released with the corpus so the adjudication can be inspected and disputed.
+which asks whether an emitted number matches a headline number in the paper. All
+seven were adjudicated by hand against the paper's own numeric claims; the
+worksheet pairing each artefact's captured stdout with those claims is released
+with the corpus so the judgements can be inspected and disputed. One was scored
+\emph{match} and six \emph{not comparable}. We give the count rather than a rate:
+seven cannot support a percentage.
 
-That the sample thins to seven from 459 is itself the finding: the question the
-rung was designed to answer is, for this corpus, almost entirely unanswerable,
-because almost nothing gets far enough to ask it of.
+Reading the seven is more informative than counting them, because it shows that
+rung 9 is a weaker rung than its name suggests. Emitting output is not the same
+as running the analysis. Two artefacts executed a bundled self-test that reports
+tensor shapes and losses on synthetic inputs. One ran a correctness validator
+that skipped every GPU check because the CUDA extensions were not built, which
+is precisely where the paper's throughput claims come from. One completed a
+walk-forward experiment whose data fetch returned nothing for every ticker, so
+the analysis ran on an empty universe. One terminated on a missing API key, and
+the captured output is that error. One ran a data-acquisition step that wrote
+files and printed nothing.
+
+The single \emph{match} is instructive about what success looks like. The
+repository documents \texttt{finalscripts/table1.py}, the script announces its
+output as the paper's Table 1, and it prints the per-method precision, recall and
+F1 figures that table contains, on the same 14-variable panel the abstract
+describes. One artefact in 459 regenerated a published table on a clean machine
+without contacting anyone.
+
+That the sample thins from 459 to seven, and from seven to one, is itself the
+finding: the question the rung was designed to answer is, for this corpus, very
+nearly unanswerable, because almost nothing gets far enough to ask it of.

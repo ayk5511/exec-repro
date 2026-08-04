@@ -37,10 +37,12 @@ Several of the failures are ones an author could resolve in a message and a
 motivated reader in an afternoon. The claim is about the cost of that
 afternoon, multiplied across a literature.
 
-The converse also holds. Producing output says nothing about whether the output
-is correct, whether the method is sound, or whether the result would survive new
-data. Rung 10 addresses the first of those and, in this corpus, has almost no
-sample to work with.
+The converse also holds, and the seven adjudicated artefacts make it concrete.
+Producing output says nothing about whether the output is the paper's: two ran a
+bundled self-test on synthetic inputs, one skipped every GPU measurement the
+paper's claims depend on, one analysed an empty universe after its data fetch
+returned nothing, and one printed an authentication error. Clearing rung 9
+establishes that a program ran, not that the study did.
 
 \subsection{Where the attrition actually happens}\label{sec:where}
 
@@ -90,7 +92,12 @@ hangs.
 \emph{Rung 10 is human-scored.} The final rung reflects one scorer's judgement
 about whether an emitted number corresponds to a published claim. With seven
 eligible artefacts this is disclosed as adjudication rather than measurement, and
-the worksheet is released so that the judgements can be checked.
+the worksheet is released so that the judgements can be checked. The single
+\emph{match} rests on the script's own identification of its output as the
+paper's Table 1 together with agreement on the panel dimension stated in the
+abstract; cell-level agreement with the published table was not verified, because
+that table appears in the PDF body rather than in the machine-readable metadata
+this study works from.
 
 \subsection{The harness as the durable contribution}\label{sec:harness_contribution}
 

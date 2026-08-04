@@ -25,9 +25,9 @@
       "1.1"
     ],
     "emitted_excerpt": "============================================================\nRIENET COMPREHENSIVE TEST\n============================================================\nTesting RIEnetLayer functionality...\n\u2713 Weights output shape: (4, 8, 1)\n\u2713 Weights sum check: [[1.0000001 ]\n [0.99999994]\n [1.        ]\n [1.        ]]\n\u2713 Precision matrix output shape: (4, 8, 8)\n\nTesting variance_loss_function...\n\u2713 Variance loss calculated: [[[0.01684704]]\n\n [[0.03106012]]\n\n [[0.01685648]]\n\n [[0.02106038]]]\n\u2713 Loss shape: (4, 1, 1)\n\nTesting end-to-end workflow...\n\u2713 End-to-end test successful\n\u2713 Input shape: (10, 12, 60)\n\u2713 Output shape: (10, 12, 1)\n\u2713 Portfolio loss: [[[0.00010489]]\n\n [[0.00010509]]\n\n [[0.00011631]]\n\n [[0.00011754]]\n\n [[0.0001126 ]]\n\n [[0.00010966]]\n\n [[0.00011253]]\n\n [[0.00010573]]\n\n [[0.00010889]]\n\n [[0.0001099 ]]]\n\u2713 Weight sums (should be ~1): [1.         1.         1.         0.99999994 1.        ]...\n\n============================================================\n\ud83c\udf89 ALL TESTS PASSED! \ud83c\udf89\nThe RIEnet package is working correctly.\n============================================================\n\n\ud83d\udcd6 CITATION REMINDER:\n\n    Please cite the following references when using RIEnet:\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2025).\n    Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage.\n    Proceedings of the 6th ACM International Conference on AI in Finance (ICAIF '25).\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2026).\n    End-to-End Large Portfolio Optimization for Variance Minimization with Neural Networks through Covariance Cleaning. \n    The Journal of Finance and Data Science \n\n    For software citation:\n\n    @software{rienet2025,\n        title={RIEnet: A Compact Rotational Invariant Estimator Network for Global Minimum-Variance Optimisation},\n        author={Christian Bongiorno},\n        year={2025},\n        version={1.1.13},\n        url={https://github.com/bongiornoc/RIEnet}\n    }\n    \n",
-    "verdict": "",
+    "verdict": "not_comparable",
     "matched_value": "",
-    "justification": ""
+    "justification": "Entry point comprehensive_test.py is a self-test. It emits array shapes and losses computed on synthetic inputs, not the paper's portfolio-optimisation results. Nothing it prints corresponds to a published quantity."
   },
   {
     "key": "2606.21784",
@@ -66,9 +66,9 @@
     ],
     "emitted_numbers": [],
     "emitted_excerpt": "[1] clearing engine: PASS (5000 random books, conservation + nonneg)\n[2] CUDA==naive: SKIPPED (modules not built: No module named 'kineticsim_cuda')\n[3] CUDA~=CPU: SKIPPED (optimized module not built: No module named 'kineticsim_cuda')\n\n(GPU checks skipped \u2014 build the CUDA modules with ./build.sh to run them on the RTX 5090.)\n",
-    "verdict": "",
+    "verdict": "not_comparable",
     "matched_value": "",
-    "justification": ""
+    "justification": "The validator ran but reported 'CUDA==naive: SKIPPED' and 'CUDA~=CPU: SKIPPED' because the CUDA modules were not built. Every headline claim in the paper is a GPU throughput or speedup figure, so the executed subset excludes exactly the measurements that would be compared."
   },
   {
     "key": "2607.23068",
@@ -103,9 +103,9 @@
       "2507.01918"
     ],
     "emitted_excerpt": "============================================================\nCOMPACT-RIENET COMPREHENSIVE TEST\n============================================================\nTesting CompactRIEnetLayer functionality...\n\u2713 Weights output shape: (4, 8, 1)\n\u2713 Weights sum check: [[0.99999994]\n [0.99999994]\n [0.9999999 ]\n [0.9999999 ]]\n\u2713 Precision matrix output shape: (4, 8, 8)\n\nTesting variance_loss_function...\n\u2713 Variance loss calculated: [[[0.02035945]]\n\n [[0.01325049]]\n\n [[0.01236179]]\n\n [[0.02156594]]]\n\u2713 Loss shape: (4, 1, 1)\n\nTesting end-to-end workflow...\n\u2713 End-to-end test successful\n\u2713 Input shape: (10, 12, 60)\n\u2713 Output shape: (10, 12, 1)\n\u2713 Portfolio loss: [[[0.0001027 ]]\n\n [[0.00010152]]\n\n [[0.00010087]]\n\n [[0.00010269]]\n\n [[0.00010196]]\n\n [[0.00010188]]\n\n [[0.00010149]]\n\n [[0.00010118]]\n\n [[0.00010331]]\n\n [[0.00010208]]]\n\u2713 Weight sums (should be ~1): [0.9999999 1.        1.0000001 1.        1.       ]...\n\n============================================================\n\ud83c\udf89 ALL TESTS PASSED! \ud83c\udf89\nThe Compact-RIEnet package is working correctly.\n============================================================\n\n\ud83d\udcd6 CITATION REMINDER:\n\n    Compact-RIEnet is deprecated and no longer maintained.\n    Install the actively maintained replacement with `pip install rienet`.\n    Active repository: https://github.com/bongiornoc/RIEnet\n\n    Please cite the following references when using Compact-RIEnet:\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2025).\n    Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage.\n    Proceedings of the 6th ACM International Conference on AI in Finance (ICAIF '25).\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2025).\n    End-to-End Large Portfolio Optimization for Variance Minimization with Neural Networks through Covariance Cleaning.\n    arXiv preprint arXiv:2507.01918.\n\n    For software citation:\n\n    @software{compact_rienet2025,\n        title={Compact-RIEnet: A Compact Rotational Invariant Estimator Network for Global Minimum-Variance Opti",
-    "verdict": "",
+    "verdict": "not_comparable",
     "matched_value": "",
-    "justification": ""
+    "justification": "Entry point comprehensive_test.py is a self-test on synthetic inputs. The paper's recoverable claim concerns a learnable-parameter reduction; the script reports tensor shapes and synthetic losses instead."
   },
   {
     "key": "2605.30363",
@@ -146,9 +146,9 @@
       "0.92"
     ],
     "emitted_excerpt": "\n# Paper Table 1  (14-variable consistent panel; theta_C = 0.8 for Cross Validation; new API calls = 0)\n\nMethod                             R     P     F1     Off  hits  FA\n----------------------------------------------------------------\nLLM only                        0.77  0.87   0.82    +3.1    20   3\nPELT                            0.58  0.65   0.61   +10.6    15   8\nBinSeg                          0.65  0.71   0.68    +8.2    17   7\nBai-Perron                      0.62  0.64   0.63   +14.8    16   9\nPCMCI                           0.35  0.69   0.46   -10.0     9   4\nCross Validation + PELT         0.92  0.65   0.76    -0.2    24  13\nCross Validation + BinSeg       0.88  0.56   0.69    -2.7    23  18\nCross Validation + Bai-Perron   0.92  0.63   0.75    -1.0    24  14\nCross Validation + PCMCI        0.88  0.77   0.82    +0.9    23   7 *\n----------------------------------------------------------------\n* = best F1.  R/P/F1 computed directly from raw counts (exact 2-dp).\nStandalone PELT/BinSeg/Bai-Perron/PCMCI = data-only baselines;\nCross Validation = our detector-agnostic pipeline on the same panel.\n",
-    "verdict": "",
-    "matched_value": "",
-    "justification": ""
+    "verdict": "match",
+    "matched_value": "14-variable panel",
+    "justification": "Entry point finalscripts/table1.py self-identifies its output as 'Paper Table 1' and emits the paper's per-method R/P/F1/offset/hits/false-alarm table. The one numeric claim recoverable from the abstract, a 14-variable consistent panel, appears verbatim in the output header. NOTE: cell-level agreement with the published Table 1 was not verified, because the table lives in the PDF body rather than the abstract; this verdict rests on the script's self-identification plus the panel dimension."
   },
   {
     "key": "2602.00080",
@@ -177,9 +177,9 @@
       "0.00"
     ],
     "emitted_excerpt": "Fetching asset data...\nFetching 122 assets from 2010-01-01 to 2024-12-31...\nSkipping AAPL - no data\nSkipping MSFT - no data\nSkipping GOOGL - no data\nSkipping AMZN - no data\nSkipping NVDA - no data\nSkipping META - no data\nSkipping BRK-B - no data\nSkipping TSLA - no data\nSkipping UNH - no data\nSkipping LLY - no data\nSkipping JPM - no data\nSkipping V - no data\nSkipping XOM - no data\nSkipping JNJ - no data\nSkipping MA - no data\nSkipping AVGO - no data\nSkipping PG - no data\nSkipping HD - no data\nSkipping CVX - no data\nSkipping MRK - no data\nSkipping COST - no data\nSkipping ABBV - no data\nSkipping PEP - no data\nSkipping KO - no data\nSkipping ADBE - no data\nSkipping WMT - no data\nSkipping MCD - no data\nSkipping CRM - no data\nSkipping CSCO - no data\nSkipping BAC - no data\nSkipping TMO - no data\nSkipping ACN - no data\nSkipping NFLX - no data\nSkipping AMD - no data\nSkipping LIN - no data\nSkipping ABT - no data\nSkipping ORCL - no data\nSkipping DHR - no data\nSkipping INTC - no data\nSkipping DIS - no data\nSkipping WFC - no data\nSkipping VZ - no data\nSkipping PM - no data\nSkipping INTU - no data\nSkipping CMCSA - no data\nSkipping NKE - no data\nSkipping RTX - no data\nSkipping TXN - no data\nSkipping IBM - no data\nSkipping QCOM - no data\nSkipping NOW - no data\nSkipping SPGI - no data\nSkipping HON - no data\nSkipping AMGN - no data\nSkipping GE - no data\nSkipping CAT - no data\nSkipping AMAT - no data\nSkipping PFE - no data\nSkipping LOW - no data\nSkipping UNP - no data\nSkipping GS - no data\nSkipping BKNG - no data\nSkipping ISRG - no data\nSkipping ELV - no data\nSkipping MS - no data\nSkipping MDT - no data\nSkipping T - no data\nSkipping SYK - no data\nSkipping ADP - no data\nSkipping BLK - no data\nSkipping VRTX - no data\nSkipping DE - no data\nSkipping GILD - no data\nSkipping C - no data\nSkipping REGN - no data\nSkipping ZTS - no data\nSkipping ADI - no data\nSkipping LRCX - no data\nSkipping SCHW - no data\nSkipping MMC - no data\nSkipping CB - no data\nSkipping MO - no data\nSkipping PANW - no data\n",
-    "verdict": "",
+    "verdict": "not_comparable",
     "matched_value": "",
-    "justification": ""
+    "justification": "The walk-forward experiment executed to completion but its data fetch returned 'no data' for every requested ticker, network access being denied during execution by design. The analysis therefore ran on an empty universe and emitted no result comparable to the paper."
   },
   {
     "key": "2506.07315",
@@ -189,9 +189,9 @@
     "paper_claims": [],
     "emitted_numbers": [],
     "emitted_excerpt": "Error initializing API client for model gpt-4o: No API key found for model gpt-4o. Please provide an API key.\nTraceback (most recent call last):\n  File \"/work/model_configs.py\", line 438, in init_api_client\n    raise ValueError(f\"No API key found for model {model_name}. Please provide an API key.\")\nValueError: No API key found for model gpt-4o. Please provide an API key.\n\n",
-    "verdict": "",
+    "verdict": "not_comparable",
     "matched_value": "",
-    "justification": ""
+    "justification": "Execution terminated in the model-initialisation step with 'No API key found for model gpt-4o'. The captured output is that error, not a benchmark result."
   },
   {
     "key": "2410.23296",
@@ -210,8 +210,8 @@
     ],
     "emitted_numbers": [],
     "emitted_excerpt": "",
-    "verdict": "",
+    "verdict": "not_comparable",
     "matched_value": "",
-    "justification": ""
+    "justification": "The documented entry point data_fetch.py performs the data-acquisition step and emitted no stdout; artefacts were written but no numeric result was produced to compare against the paper's claims."
   }
 ]
