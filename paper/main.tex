@@ -1,0 +1,112 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{listings}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!50!black,
+    urlcolor=blue!70!black
+}
+
+\onehalfspacing
+
+\title{Does It Actually Run?\\
+An Execution-Based Reproducibility Study of Published\\
+Machine-Learning Finance Research}
+
+\author{
+    Akram Khan\thanks{Independent Researcher. ORCID: \href{https://orcid.org/0009-0002-7521-8648}{0009-0002-7521-8648}. Email: \href{mailto:1819ak@gmail.com}{1819ak@gmail.com}. The measurement harness, the corpus manifest, and the full per-paper outcome records are released at \href{https://github.com/ayk5511/exec-repro}{github.com/ayk5511/exec-repro}.}
+}
+
+\date{July 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Reproducibility in empirical finance is normally measured by what a paper
+\emph{says}: whether it claims code is available, and whether a link appears.
+That is a property of the manuscript, not of the research. This paper measures
+the property that matters to anyone who wants to build on published work,
+by taking the released artefacts and attempting to run them.
+
+We introduce the Reproducibility Attrition Ladder, an ordered scale of eleven
+cumulative rungs running from ``the paper makes no code-availability claim'' to
+``an emitted number matches the paper's headline result''. Every rung except the
+last is decided mechanically, and every failure is recorded against a closed
+vocabulary of reasons, so the point at which an artefact stops, and the reason it
+stops, are both reportable as data rather than as anecdote. We apply the ladder
+to a corpus of arXiv quantitative-finance machine-learning papers, cloning each
+advertised repository, building its declared environment inside a container, and
+executing its entry point under a fixed time budget.
+
+Applied to 459 arXiv quantitative-finance machine-learning papers that advertise
+a code repository, the curve falls steeply and not where the reproducibility
+discourse usually points. Link rot removes 5.2\%. The two large losses are
+environment declaration, where 176 of 427 cloned repositories ship no dependency
+specification at all, and environment construction, where half of those that do
+declare dependencies can no longer install them, through packages that have left
+the index, pin sets that no longer resolve, and sources that no longer compile.
+Fourteen point four per cent yield an identifiable entry point and \textbf{nine
+papers, 2.0\%, execute to completion and emit output} without correspondence,
+manual repair, or reading beyond the README. The most discretionary step,
+deciding what to run, is reported under two specifications that agree exactly on
+every rung decided before it applies, and the curve replicates on an earlier,
+independently drawn sample.
+
+The finding is about artefacts rather than findings: released code that does not
+run unassisted is not thereby wrong, but it cannot be checked without
+reimplementation. Because the dominant environment failure is a dependency
+leaving the index rather than an omission at submission, executability decays
+after publication, and the same corpus will score lower each year.
+
+The measurement instrument is itself released as an installable package, so the
+study can be repeated on other corpora, re-run as the literature changes, and
+extended to fields beyond finance. We are explicit about what the ladder does and
+does not establish: an artefact that fails to run is not thereby wrong, it is
+not independently executable as released, which is a weaker but more precisely
+measurable claim.
+
+\medskip
+\noindent\textbf{Keywords:} reproducibility, computational reproducibility,
+research artefacts, machine learning, quantitative finance, meta-science,
+open science, research software
+
+\medskip
+\noindent\textbf{JEL Classification:} C63, C88, G17
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_ladder}
+\input{sections/04_results}
+\input{sections/05_discussion}
+
+\bibliographystyle{apalike}
+\bibliography{bib/references}
+
+\end{document}

@@ -1,0 +1,103 @@
+\section{Discussion}\label{sec:discussion}
+
+\subsection{What the curve licenses us to say}\label{sec:claim_scope}
+
+The measured quantity is narrow and worth stating precisely. Of 154
+quantitative-finance machine-learning papers that advertise a code repository,
+four produced output when a stranger cloned the repository, built the declared
+environment in a container, and ran the documented entry point without
+correspondence, manual repair, or reading beyond the README.
+
+That is not a claim that the other 150 papers are wrong, and it is not a
+replication failure rate. It is a statement about artefacts, not findings: the
+released code, as released, does not run unassisted on a current platform.
+Several of the failures are ones an author could resolve in a message and a
+motivated reader in an afternoon. The claim is about the cost of that
+afternoon, multiplied across a literature.
+
+The converse also holds. Producing output says nothing about whether the output
+is correct, whether the method is sound, or whether the result would survive new
+data. Rung 10 addresses the first of those and, in this corpus, has almost no
+sample to work with.
+
+\subsection{Where the attrition actually happens}\label{sec:where}
+
+The practical value of an ordered ladder is that it localises the loss, and the
+location is not where the reproducibility discourse usually points. Link rot,
+the most-discussed failure, accounts for 7.8\%. The two large drops are
+environment declaration (53 repositories ship no dependency specification) and
+environment construction (half of those that declare one no longer install).
+
+These have different remedies. The first is a submission-time omission and is
+cheap to fix: a \texttt{requirements.txt} clears it, and an editorial checkbox
+would move the number. The second is decay, and no amount of author diligence at
+submission prevents it, because the failure is that a pinned dependency later
+left the index. Mitigating it requires artefacts that pin more than package
+versions, which in practice means a container image or a lockfile with hashes.
+
+The distinction matters for policy. A journal that requires a dependency file
+addresses the larger drop immediately. A journal that wants artefacts to survive
+five years has to ask for something stronger, and should know it is asking for
+something more expensive.
+
+\subsection{Limitations}\label{sec:limitations}
+
+\emph{The entry-point heuristic is the binding constraint on the upper rungs.}
+Between rungs 6 and 8 the measurement is partly measuring us. We report both
+specifications (\Cref{sec:sensitivity}) rather than choosing one, but neither
+matches a determined human who would read the source, infer the intended
+invocation, and supply arguments. The upper rungs are therefore a lower bound on
+what a persistent reader could achieve.
+
+\emph{The corpus is arXiv and recent.} Fields whose authors do not preprint are
+absent, and the sample is weighted toward the last two years. The curve describes
+current arXiv practice in quantitative finance.
+
+\emph{The measurement is timestamped.} Because \texttt{package\_not\_found}
+dominates the environment failures, the same corpus will score lower each year
+without a single repository changing. Any comparison against these figures must
+be dated, which is part of why the harness is released rather than only the
+numbers.
+
+\emph{Time and resource budgets bind.} Execution is capped at fifteen minutes per
+artefact on two allocated cores without a GPU. Two repositories hit that ceiling
+and are recorded as timeouts, not failures of a different kind. An artefact whose
+honest runtime is a day on a cluster is not distinguishable here from one that
+hangs.
+
+\emph{Rung 10 is human-scored.} The final rung reflects one scorer's judgement
+about whether an emitted number corresponds to a published claim. With four
+eligible artefacts this is disclosed as adjudication rather than measurement, and
+the worksheet is released so that the judgements can be checked.
+
+\subsection{The harness as the durable contribution}\label{sec:harness_contribution}
+
+The numbers in \Cref{sec:results} describe one corpus at one moment. The
+instrument that produced them is the part intended to outlast the snapshot: it is
+installable, it takes any corpus of paper identifiers and code URLs, and it emits
+per-artefact records with a closed failure vocabulary.
+
+Three properties were built in because their absence would have been invisible in
+the output. Harness-attributable failures carry a distinct reason code and are
+excluded from claims about the literature. Conditions indicating harness
+misconfiguration raise an error rather than being recorded as data, so a broken
+run fails loudly instead of producing a clean-looking corpus of false negatives.
+And the discretionary heuristic is a switch rather than a constant, so its effect
+is reportable instead of assumed.
+
+Those choices were not precautionary in the abstract. During development, a
+container backend that installed dependencies in one container and executed in
+another produced a complete, plausible, entirely false result in which nothing in
+the corpus ran; it was caught because the failures took a tenth of a second. A
+study that measures how often other people's code silently fails to work is
+poorly placed to assume its own does.
+
+\subsection{Future work}\label{sec:future}
+
+Three extensions are supported by the released artefact. The corpus can be widened
+beyond arXiv and beyond finance, since nothing in the ladder is domain-specific.
+The same corpus can be re-scored periodically to measure the decay rate directly,
+converting a limitation into a result. And the entry-point step can be
+strengthened, ideally by comparing the automated heuristics against a
+human-annotated subset, which would replace the sensitivity band with a
+calibration.

@@ -1,0 +1,177 @@
+\section{Results}\label{sec:results}
+
+\subsection{The corpus}\label{sec:corpus}
+
+The corpus is 1,754 machine-learning papers in quantitative finance, harvested
+from arXiv along two axes. The six quantitative-finance categories (q-fin.CP, ST,
+TR, PM, RM, MF) were read to exhaustion under a machine-learning filter, and the
+general machine-learning categories (cs.LG, stat.ML, econ.EM, cs.CE) were queried
+by finance topic, which is where finance work that is not indexed under q-fin
+lives. Of these papers, 459 advertise a code URL on a recognised hosting service
+and constitute the execution sample.
+
+Code URLs were recovered in two passes, and the difference between them is
+itself a result. Reading abstracts alone, the standard method, found 98. Reading
+the rendered full text of each paper found a further 361, so nearly four-fifths
+of the advertised repositories in this literature are invisible to
+abstract-level extraction. Any disclosure rate computed from abstracts is a
+severe underestimate.
+
+Extracted URLs required normalisation before use. URLs harvested from prose
+routinely carry a trailing sentence period or a wrapping bracket, and treating
+those characters as part of the address would have reported live repositories as
+dead.
+
+Two features of the corpus bound the claims. It is an arXiv sample, so venues
+whose authors do not preprint are absent, and it is described throughout as
+arXiv ML-finance rather than as the ML-finance literature. And although the
+harvest reaches back to 2019, it remains weighted toward recent work.
+
+\subsection{The attrition curve}\label{sec:curve}
+
+\Cref{tab:attrition} reports the fraction of the 459-paper execution sample
+clearing each rung. The curve is monotone by construction and is verified as such
+by the audit script.
+
+\begin{table}[H]
+\centering
+\caption{Attrition across the ladder, $n=459$ papers advertising a code URL.
+The \emph{README} column is the primary specification, in which entry points may
+be taken from the authors' own documentation; the \emph{convention} column
+restricts entry points to conventionally named scripts. The two agree exactly
+through rung 6, which are decided before any entry-point heuristic applies.}
+\label{tab:attrition}
+\small
+\begin{tabular}{@{}clrrrr@{}}
+\toprule
+\# & Rung & \multicolumn{2}{c}{README (primary)} & \multicolumn{2}{c}{Convention only} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+   &      & $n$ & \% & $n$ & \% \\
+\midrule
+2  & \texttt{URL\_PRESENT}       & 459 & 100.0 & 459 & 100.0 \\
+3  & \texttt{URL\_RESOLVES}      & 435 & 94.8  & 435 & 94.8 \\
+4  & \texttt{CLONED}             & 427 & 93.0  & 427 & 93.0 \\
+5  & \texttt{DEPS\_DECLARED}     & 251 & 54.7  & 251 & 54.7 \\
+6  & \texttt{ENV\_BUILDS}        & 127 & 27.7  & 127 & 27.7 \\
+7  & \texttt{ENTRYPOINT\_FOUND}  & 66  & 14.4  & 41  & 8.9 \\
+8  & \texttt{RUNS}               & 11  & 2.4   & 6   & 1.3 \\
+9  & \texttt{PRODUCES\_OUTPUT}   & 9   & 2.0   & 4   & 0.9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three features of the curve carry the paper's content.
+
+\emph{Link rot is real but modest.} Twenty-four of 459 advertised repositories
+(5.2\%) no longer resolve. This is the failure mode most often assumed to
+dominate, and it is the smallest of the large drops. Because a transient
+resolver failure is indistinguishable from a dead domain on a single attempt,
+transport-level failures are retried before being recorded; without that, one
+repository in this corpus would have been reported as rotted when it was live.
+
+\emph{The first large drop is environment declaration.} Of the 427 repositories
+that clone, 176 ship no dependency specification of any kind, taking the sample
+from 93.0\% to 54.7\% in a single rung. Nothing exotic is required to clear it: a
+\texttt{requirements.txt} suffices.
+
+\emph{The second large drop is environment construction.} Of the 251
+repositories that declare dependencies, half again fail to install them, taking
+the sample to 27.7\%. This is substantially decay rather than negligence, and
+\Cref{tab:failure_mix} shows the mechanism.
+
+\subsection{Why artefacts stop}\label{sec:failure_mix}
+
+\begin{table}[H]
+\centering
+\caption{Failure mix by blocking rung, primary specification. Counts are
+repositories stopping at that rung for that reason.}
+\label{tab:failure_mix}
+\small
+\begin{tabular}{@{}llr@{}}
+\toprule
+Rung & Reason & $n$ \\
+\midrule
+\texttt{URL\_RESOLVES}     & \texttt{http\_404}                       & 23 \\
+                           & \texttt{http\_403\_private}              & 1 \\
+\midrule
+\texttt{CLONED}            & \texttt{not\_a\_repository}              & 5 \\
+                           & \texttt{clone\_timeout}                  & 2 \\
+                           & \texttt{clone\_auth\_required}           & 1 \\
+\midrule
+\texttt{DEPS\_DECLARED}    & \texttt{no\_dependency\_spec}            & 176 \\
+\midrule
+\texttt{ENV\_BUILDS}       & \texttt{package\_not\_found}             & 45 \\
+                           & \texttt{dependency\_resolution\_conflict}& 38 \\
+                           & \texttt{build\_from\_source\_failed}     & 34 \\
+                           & \texttt{non\_python\_toolchain\_required}& 5 \\
+                           & \texttt{python\_version\_unsupported}    & 2 \\
+\midrule
+\texttt{ENTRYPOINT\_FOUND} & \texttt{no\_entrypoint\_identifiable}    & 61 \\
+\midrule
+\texttt{RUNS}              & \texttt{runtime\_exception}              & 32 \\
+                           & \texttt{missing\_data\_file}             & 16 \\
+                           & \texttt{execution\_timeout}              & 4 \\
+                           & \texttt{requires\_gpu}                   & 2 \\
+                           & \texttt{requires\_api\_key}              & 1 \\
+\midrule
+\texttt{PRODUCES\_OUTPUT}  & \texttt{ran\_but\_no\_artefact}          & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The environment failures divide into three roughly comparable mechanisms.
+\texttt{package\_not\_found} (45) is a pinned dependency that has left the index;
+\texttt{dependency\_resolution\_conflict} (38) is a pin set that no longer admits
+a solution; \texttt{build\_from\_source\_failed} (34) is a package with no
+current wheel that fails to compile. All three are properties of elapsed time
+rather than of the authors' diligence at submission, which means executability
+decays after publication. It also means this measurement is timestamped: the same
+corpus scored two years hence will score lower.
+
+At the execution rung, the sixteen \texttt{missing\_data\_file} outcomes are
+substantive. Network access is denied during execution by design, so a repository
+that fetches its inputs at run time is recorded here rather than being rescued by
+our connectivity: the artefact as released does not carry what it needs.
+
+\subsection{Sensitivity to the entry-point heuristic}\label{sec:sensitivity}
+
+Identifying what to run is the most discretionary step, so the study is run in two
+configurations. Restricting to conventionally named scripts finds an entry point
+in 41 repositories; additionally accepting a command documented in the
+repository's own README finds 66. The looser specification raises the number that
+execute from 6 to 11 and the number that emit output from 4 to 9.
+
+The two configurations agree exactly on rungs 2 through 6, which are decided
+before any entry-point logic runs. That agreement is checked by the audit script
+and is the study's internal-consistency control: a discrepancy there would mean
+the campaign was not deterministic and no figure above could be quoted.
+
+The gap between the columns is the honest measure of how much of the upper curve
+is our conservatism rather than the literature's. It is large in relative terms
+and small in absolute terms: on either specification, fewer than one paper in
+forty executes to completion unassisted.
+
+\subsection{Replication on an independent sample}\label{sec:replication}
+
+An earlier campaign scored a 154-paper sample drawn only from the q-fin
+categories. The present corpus is three times larger and includes papers reached
+through the general machine-learning categories, which the earlier sample could
+not see. The two agree closely: dependency declaration 53.2\% against 54.7\%,
+environment construction 26.6\% against 27.7\%, and execution 2.6\% against
+2.4\%.
+
+Because the second sample is larger and differently sourced, this is evidence
+that the shape of the curve is a property of the literature rather than of the
+particular papers first drawn.
+
+\subsection{Rung 10}\label{sec:rung10_results}
+
+Nine repositories produced output and are therefore eligible for the final rung,
+which asks whether an emitted number matches a headline number in the paper. Nine
+is too few to support a rate, and we report no percentage for rung 10. The
+worksheet pairing each artefact's captured stdout with its paper's numeric claims
+is released with the corpus so the adjudication can be inspected and disputed.
+
+That the sample thins to nine from 459 is itself the finding: the question the
+rung was designed to answer is, for this corpus, almost entirely unanswerable,
+because almost nothing gets far enough to ask it of.

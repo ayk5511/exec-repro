@@ -1,0 +1,44 @@
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Tectonic cache
+build/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+
+# Execution scratch: cloned third-party repositories and their virtualenvs.
+# These are other people's code, are large, and are re-derivable from the
+# corpus manifest, so they are never committed.
+scratch/
+scratch_*/
+workdir/
+.exec_repro_venv/
+corpus/corpus.backup.jsonl

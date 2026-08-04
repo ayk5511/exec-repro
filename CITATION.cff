@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: "exec-repro: Execution-Based Reproducibility Measurement for Research Artefacts"
+message: "If you use this harness or the attrition ladder, please cite the accompanying working paper."
+type: software
+authors:
+  - family-names: Khan
+    given-names: Akram
+    orcid: "https://orcid.org/0009-0002-7521-8648"
+    email: 1819ak@gmail.com
+version: "0.1.0"
+license: MIT
+repository-code: "https://github.com/ayk5511/exec-repro"
+keywords:
+  - reproducibility
+  - computational reproducibility
+  - research artefacts
+  - machine learning
+  - quantitative finance
+  - meta-science
+preferred-citation:
+  type: article
+  title: "Does It Actually Run? An Execution-Based Reproducibility Study of Published Machine-Learning Finance Research"
+  authors:
+    - family-names: Khan
+      given-names: Akram
+      orcid: "https://orcid.org/0009-0002-7521-8648"
+  year: 2026
+  status: working-paper
+  notes: "Available at SSRN."

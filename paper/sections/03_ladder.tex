@@ -1,0 +1,140 @@
+\section{The Reproducibility Attrition Ladder}\label{sec:ladder}
+
+\subsection{Why a ladder rather than a score}\label{sec:why_ladder}
+
+Reproducibility instruments in common use return a score: a paper earns points
+for releasing code, for releasing data, for pinning an environment. Scores are
+convenient, but they conflate failures that have nothing to do with one another.
+A paper whose repository has been deleted and a paper whose repository is
+complete but whose dependencies no longer resolve both lose the same point, and
+the aggregate number cannot tell the two apart. The remedies differ completely:
+one is a hosting problem, the other is a packaging problem.
+
+An ordered ladder keeps that information. Each artefact is pushed as far as it
+will go, and what we record is the rung at which it stopped together with the
+reason it stopped. Because the rungs are cumulative, reaching rung $n$ implies
+every rung below $n$ was cleared, so the statement ``$x\%$ of papers clear rung
+$n$ or better'' is unambiguous and the resulting curve is monotone by
+construction. Monotonicity is not decoration: it is a property the audit script
+checks on every build, because a non-monotone curve is a signal that the corpus
+was scored inconsistently.
+
+\subsection{The rungs}\label{sec:rungs}
+
+\Cref{tab:ladder} gives the scale. Rungs 0 to 2 are properties of the manuscript
+and require no execution. Rungs 3 and 4 test retrieval. Rungs 5 and 6 test
+whether the declared environment can be built. Rungs 7 to 9 test execution.
+Rung 10 is the scientific claim.
+
+\begin{table}[H]
+\centering
+\caption{The Reproducibility Attrition Ladder. Rungs are cumulative and strictly
+ordered. Rungs 0 to 9 are decided mechanically; rung 10 requires reading the paper
+for a headline number and is scored only on a manually curated subset.}
+\label{tab:ladder}
+\small
+\begin{tabular}{@{}clp{8.2cm}@{}}
+\toprule
+\# & Rung & Cleared when \\
+\midrule
+0  & \texttt{NO\_CLAIM}          & (floor) the paper makes no code-availability claim \\
+1  & \texttt{CLAIM\_ONLY}        & the paper claims code exists but gives no pointer \\
+2  & \texttt{URL\_PRESENT}       & a code URL appears in the paper or its metadata \\
+3  & \texttt{URL\_RESOLVES}      & the URL still answers: no link rot \\
+4  & \texttt{CLONED}             & the repository can be retrieved \\
+5  & \texttt{DEPS\_DECLARED}     & a dependency specification exists \\
+6  & \texttt{ENV\_BUILDS}        & those dependencies actually resolve and install \\
+7  & \texttt{ENTRYPOINT\_FOUND}  & a runnable entry point is identifiable \\
+8  & \texttt{RUNS}               & the entry point completes with exit code 0 in budget \\
+9  & \texttt{PRODUCES\_OUTPUT}   & execution emits artefacts or numeric output \\
+10 & \texttt{MATCHES\_PUBLISHED} & an emitted number matches a headline number \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two design choices deserve defending.
+
+First, \emph{rung 10 is never asserted by the harness}. Deciding whether an
+emitted number corresponds to a paper's headline result requires reading the
+paper, locating the claim, and judging whether the quantities are comparable at
+all. That is human work. The harness therefore stops at rung 9, the audit script
+verifies that no record claims rung 10 automatically, and the rung-10 figure is
+reported only for a manually curated subset and never extrapolated to the
+corpus.
+
+Second, \emph{network access is denied during execution and permitted during
+installation}. A repository that downloads its data when it runs is not
+self-contained: a reader without the author's credentials, or reading after the
+endpoint moves, cannot reproduce the result. Allowing the fetch would let our own
+connectivity paper over that. Installation is a different matter, since package
+indexes are the normal mechanism by which environments are built, so the
+network is available there.
+
+\subsection{A closed vocabulary for failures}\label{sec:reasons}
+
+Recording \emph{that} an artefact failed at rung 6 is less useful than recording
+\emph{why}. Free-text error capture makes that unaggregatable, so each rung
+carries a fixed set of admissible reasons and the data structure refuses any
+value outside it. The result is that the failure mix at each rung is a table.
+
+The vocabulary separates causes that call for different responses. At rung 6, for
+instance, \texttt{package\_not\_found} (a dependency has left the index),
+\texttt{python\_version\_unsupported} (the pin has aged out of the supported
+range), and \texttt{build\_from\_source\_failed} (a wheel is unavailable for the
+platform) are distinct, and only the first is really about the paper's own
+choices.
+
+One category is reserved for our own defects. If the harness locates a
+dependency specification and then fails to read it, that is a bug in the
+measurement, not a property of the paper, and it is recorded as
+\texttt{spec\_unreadable\_by\_backend} and excluded from every claim about the
+literature. This is not hypothetical: an early version of the container backend
+passed a bare filename for specifications found in a subdirectory, and the
+resulting installer error was initially classified as a dependency conflict, that
+is, as evidence against the papers. The separate code, and a regression test
+pinning it, exist because that failure mode is easy to reintroduce and
+impossible to notice in an aggregate.
+
+\subsection{Execution environment}\label{sec:environment}
+
+Each repository is cloned to a scratch directory, its declared environment is
+built, and its entry point is executed inside a container with a fixed CPU and
+memory allocation. Containers matter for two reasons: dependency isolation, so
+that one repository's pins cannot affect another's, and process isolation, since
+we are running code written by authors who never anticipated a stranger
+executing it. Where a container runtime is unavailable the harness falls back to
+a per-repository virtual environment combined with kernel-level sandboxing, which
+confines filesystem writes and denies network but shares the host kernel. The
+backend used is recorded on every result, and results produced under different
+isolation regimes are reported separately rather than pooled.
+
+Entry-point selection is the most discretionary step in the pipeline, so it is
+run as a switch rather than a constant. The \emph{convention} route looks for
+conventionally named scripts and otherwise accepts a single unambiguous top-level
+script; build scripts and configuration modules are excluded, because executing
+\texttt{setup.py} exercises the packaging toolchain rather than the paper's
+analysis. The \emph{documentation} route additionally reads the repository's
+README and takes the command the authors themselves give, subject to three
+restrictions: the command must name a target that exists in the repository, it
+must not be an installation or testing step, and it must not be a compound shell
+pipeline, since those cannot be reproducibly parsed.
+
+Both configurations are run over the whole corpus and both curves are reported
+(\Cref{sec:sensitivity}). Neither matches a determined human who would read the
+source and infer the intended invocation, so both are lower bounds; reporting the
+pair makes the size of that discretion visible instead of burying it in a design
+choice. Where no entry point is identified under the active configuration, the
+harness records \texttt{no\_entrypoint\_identifiable} rather than guessing: a
+harness that invents plausible commands would report their failure as the
+paper's.
+
+\subsection{What the ladder does not measure}\label{sec:ladder_limits}
+
+An artefact that stops low on the ladder is not thereby wrong. It is not
+independently executable as released, on a current platform, within our time
+budget, by a reader who did not write it. That is a narrower claim than
+``irreproducible'' and it is the only claim the instrument supports. Conversely,
+clearing rung 9 shows that code ran and produced output; it says nothing about
+whether the output is correct, whether the method is sound, or whether the
+finding replicates on new data. Rung 10 speaks to the first of those and to
+nothing beyond it.

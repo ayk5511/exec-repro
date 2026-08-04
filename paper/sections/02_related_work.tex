@@ -1,0 +1,68 @@
+\section{Related work}\label{sec:related}
+
+\subsection{Three literatures, three questions}\label{sec:three_literatures}
+
+The word ``reproducibility'' names different problems in different fields, and
+the distinction determines what our measurement can and cannot speak to.
+
+The broadest strand asks whether published findings are \emph{true}.
+\citet{Ioannidis2005} argued on statistical grounds that most published research
+findings are false, and the \citet{OpenScienceCollaboration2015} supplied direct
+evidence by rerunning a hundred psychology experiments with fresh data. In
+empirical finance the corresponding work is \citet{HarveyLiuZhu2016}, who
+recalibrate significance thresholds for a literature that has tested hundreds of
+candidate return predictors, and \citet{HouXueZhang2020}, who rebuild the
+anomaly literature under uniform methodology and find much of it does not
+survive. These studies concern the durability of findings under new data or
+stricter statistics. They are not about whether the original code runs.
+
+A second strand asks whether an artefact is \emph{documented} well enough that
+reproduction is possible in principle. \citet{GundersenKjensmo2018} score
+artificial-intelligence papers on documentation dimensions and find most
+underspecified; the \citet{PineauReproducibility2021} NeurIPS programme turned
+similar concerns into submission-time policy, introducing checklists and
+artefact-availability expectations at a major venue. Instruments in this family,
+including the disclosure rubric applied to machine-learning finance by
+\citet{Khan2026Survey} and the audit-trail dimensions of
+\citet{Khan2026MrAudit}, are scored by reading the paper and inspecting the
+repository. They are cheap enough to apply at corpus scale, and they measure
+disclosure.
+
+The third question, and the one this paper takes up, is whether the released
+artefact \emph{executes}. It sits between the other two: passing it is neither
+necessary nor sufficient for a finding to be true, but failing it means no reader
+can check the finding without reimplementing the work. The engineering literature
+explains why this is hard even for competent authors.
+\citet{SculleyTechnicalDebt2015} document how machine-learning systems accumulate
+dependencies, configuration, and undeclared coupling faster than conventional
+software, so a repository that ran on its author's machine drifts out of
+executability without anyone touching it.
+
+\subsection{Execution-based studies}\label{sec:exec_studies}
+
+Studies that actually run published code exist in computer science, where the
+artefact-evaluation committees of systems and programming-languages conferences
+have institutionalised the practice, and where the associated literature reports
+substantial attrition between artefacts that are advertised and artefacts that
+build and run. That work is our closest methodological relative.
+
+Two things distinguish the present study. First, quantitative finance has no
+artefact-evaluation tradition: the venues that publish machine-learning finance
+research do not, in general, run submitted code, so there is no institutional
+record of what fraction of the literature is executable. Second, artefact
+evaluation is a \emph{pass/fail} judgement made by a human reviewer who may
+correspond with the authors. Our measurement is deliberately unassisted and
+graded: no correspondence, no manual repair, and a recorded stopping point rather
+than a verdict. That makes it weaker evidence about any individual paper and
+better evidence about the distribution.
+
+\subsection{What is new here}\label{sec:novelty}
+
+Against that background the contribution is threefold. The ladder supplies an
+ordered scale where the field has used pass/fail or additive scores, so attrition
+becomes visible as a curve with a diagnosable shape. The closed failure
+vocabulary makes the \emph{reasons} for attrition a reportable table rather than
+a narrative. And the harness is released as an instrument, which matters because
+the quantity being measured decays: a corpus scored today will score differently
+in two years as packages are yanked and repositories are archived, and a study
+that cannot be re-run cannot track that.

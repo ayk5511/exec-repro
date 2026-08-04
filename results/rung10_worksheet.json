@@ -1,0 +1,293 @@
+[
+  {
+    "key": "2507.01918",
+    "title": "End-to-End Large Portfolio Optimization for Variance Minimization with Neural Networks through Covariance Cleaning",
+    "code_url": "https://github.com/bongiornoc/RIEnet",
+    "entrypoint_source": "convention",
+    "paper_claims": [],
+    "emitted_numbers": [
+      "0.00010489",
+      "0.00010509",
+      "0.00010573",
+      "0.00010889",
+      "0.00010966",
+      "0.0001099",
+      "0.00011253",
+      "0.0001126",
+      "0.00011631",
+      "0.00011754",
+      "0.01684704",
+      "0.01685648",
+      "0.02106038",
+      "0.03106012",
+      "0.99999994",
+      "1.0000001",
+      "1.1"
+    ],
+    "emitted_excerpt": "============================================================\nRIENET COMPREHENSIVE TEST\n============================================================\nTesting RIEnetLayer functionality...\n\u2713 Weights output shape: (4, 8, 1)\n\u2713 Weights sum check: [[1.0000001 ]\n [0.99999994]\n [1.        ]\n [1.        ]]\n\u2713 Precision matrix output shape: (4, 8, 8)\n\nTesting variance_loss_function...\n\u2713 Variance loss calculated: [[[0.01684704]]\n\n [[0.03106012]]\n\n [[0.01685648]]\n\n [[0.02106038]]]\n\u2713 Loss shape: (4, 1, 1)\n\nTesting end-to-end workflow...\n\u2713 End-to-end test successful\n\u2713 Input shape: (10, 12, 60)\n\u2713 Output shape: (10, 12, 1)\n\u2713 Portfolio loss: [[[0.00010489]]\n\n [[0.00010509]]\n\n [[0.00011631]]\n\n [[0.00011754]]\n\n [[0.0001126 ]]\n\n [[0.00010966]]\n\n [[0.00011253]]\n\n [[0.00010573]]\n\n [[0.00010889]]\n\n [[0.0001099 ]]]\n\u2713 Weight sums (should be ~1): [1.         1.         1.         0.99999994 1.        ]...\n\n============================================================\n\ud83c\udf89 ALL TESTS PASSED! \ud83c\udf89\nThe RIEnet package is working correctly.\n============================================================\n\n\ud83d\udcd6 CITATION REMINDER:\n\n    Please cite the following references when using RIEnet:\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2025).\n    Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage.\n    Proceedings of the 6th ACM International Conference on AI in Finance (ICAIF '25).\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2026).\n    End-to-End Large Portfolio Optimization for Variance Minimization with Neural Networks through Covariance Cleaning. \n    The Journal of Finance and Data Science \n\n    For software citation:\n\n    @software{rienet2025,\n        title={RIEnet: A Compact Rotational Invariant Estimator Network for Global Minimum-Variance Optimisation},\n        author={Christian Bongiorno},\n        year={2025},\n        version={1.1.13},\n        url={https://github.com/bongiornoc/RIEnet}\n    }\n    \n",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2606.21784",
+    "title": "KineticSim: A Lightweight, High-Performance Execution Engine for Real-Time Market Simulators",
+    "code_url": "https://github.com/KineticSim/Project-KineticSim",
+    "entrypoint_source": "readme",
+    "paper_claims": [
+      {
+        "value": "54.7",
+        "context": "order books in parallel, reaching a peak throughput of over 54.7 billion agent-events per second. On a fi"
+      },
+      {
+        "value": "3406",
+        "context": "ents per second. On a fixed workload it delivers speedups of 3406 x over CPU (NumPy),"
+      },
+      {
+        "value": "27.8",
+        "context": "x over CPU (NumPy), 27.8 x over PyTorch GPU,"
+      },
+      {
+        "value": "42.8",
+        "context": "x over PyTorch GPU, 42.8 x over JAX GPU, and"
+      },
+      {
+        "value": "8.4",
+        "context": "x over JAX GPU, and 8.4 x over a naive custom CUDA baseline, whi"
+      },
+      {
+        "value": "53",
+        "context": "y an order of magnitude less GPU memory than PyTorch. Across 53 configurations the two custom CUDA engin"
+      },
+      {
+        "value": "0.1",
+        "context": "and aggregate statistics match the CPU reference to within 0.1% . The pattern generalizes to other itera"
+      }
+    ],
+    "emitted_numbers": [],
+    "emitted_excerpt": "[1] clearing engine: PASS (5000 random books, conservation + nonneg)\n[2] CUDA==naive: SKIPPED (modules not built: No module named 'kineticsim_cuda')\n[3] CUDA~=CPU: SKIPPED (optimized module not built: No module named 'kineticsim_cuda')\n\n(GPU checks skipped \u2014 build the CUDA modules with ./build.sh to run them on the RTX 5090.)\n",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2607.23068",
+    "title": "Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage",
+    "code_url": "https://github.com/bongiornoc/Compact-RIEnet",
+    "entrypoint_source": "convention",
+    "paper_claims": [
+      {
+        "value": "39",
+        "context": "al-volatility network reduce total learnable parameters from 39 ,"
+      }
+    ],
+    "emitted_numbers": [
+      "0.00010087",
+      "0.00010118",
+      "0.00010149",
+      "0.00010152",
+      "0.00010188",
+      "0.00010196",
+      "0.00010208",
+      "0.00010269",
+      "0.0001027",
+      "0.00010331",
+      "0.01236179",
+      "0.01325049",
+      "0.02035945",
+      "0.02156594",
+      "0.9999999",
+      "0.99999994",
+      "1.0000001",
+      "1.3",
+      "2507.01918"
+    ],
+    "emitted_excerpt": "============================================================\nCOMPACT-RIENET COMPREHENSIVE TEST\n============================================================\nTesting CompactRIEnetLayer functionality...\n\u2713 Weights output shape: (4, 8, 1)\n\u2713 Weights sum check: [[0.99999994]\n [0.99999994]\n [0.9999999 ]\n [0.9999999 ]]\n\u2713 Precision matrix output shape: (4, 8, 8)\n\nTesting variance_loss_function...\n\u2713 Variance loss calculated: [[[0.02035945]]\n\n [[0.01325049]]\n\n [[0.01236179]]\n\n [[0.02156594]]]\n\u2713 Loss shape: (4, 1, 1)\n\nTesting end-to-end workflow...\n\u2713 End-to-end test successful\n\u2713 Input shape: (10, 12, 60)\n\u2713 Output shape: (10, 12, 1)\n\u2713 Portfolio loss: [[[0.0001027 ]]\n\n [[0.00010152]]\n\n [[0.00010087]]\n\n [[0.00010269]]\n\n [[0.00010196]]\n\n [[0.00010188]]\n\n [[0.00010149]]\n\n [[0.00010118]]\n\n [[0.00010331]]\n\n [[0.00010208]]]\n\u2713 Weight sums (should be ~1): [0.9999999 1.        1.0000001 1.        1.       ]...\n\n============================================================\n\ud83c\udf89 ALL TESTS PASSED! \ud83c\udf89\nThe Compact-RIEnet package is working correctly.\n============================================================\n\n\ud83d\udcd6 CITATION REMINDER:\n\n    Compact-RIEnet is deprecated and no longer maintained.\n    Install the actively maintained replacement with `pip install rienet`.\n    Active repository: https://github.com/bongiornoc/RIEnet\n\n    Please cite the following references when using Compact-RIEnet:\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2025).\n    Neural Network-Driven Volatility Drag Mitigation under Aggressive Leverage.\n    Proceedings of the 6th ACM International Conference on AI in Finance (ICAIF '25).\n\n    Bongiorno, C., Manolakis, E., & Mantegna, R. N. (2025).\n    End-to-End Large Portfolio Optimization for Variance Minimization with Neural Networks through Covariance Cleaning.\n    arXiv preprint arXiv:2507.01918.\n\n    For software citation:\n\n    @software{compact_rienet2025,\n        title={Compact-RIEnet: A Compact Rotational Invariant Estimator Network for Global Minimum-Variance Opti",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2605.30363",
+    "title": "Enhancing Regime Shift Detection Using Unstructured Data: A Study on the Treasury Market",
+    "code_url": "https://github.com/mingxuan-yi/regime_shift",
+    "entrypoint_source": "readme",
+    "paper_claims": [
+      {
+        "value": "14",
+        "context": "FOMC minutes paired with a 14 -variable U.S. Treasury and macroeconomi"
+      }
+    ],
+    "emitted_numbers": [
+      "-0.2",
+      "-1.0",
+      "-10.0",
+      "-2.7",
+      "0.35",
+      "0.46",
+      "0.56",
+      "0.58",
+      "0.61",
+      "0.62",
+      "0.63",
+      "0.64",
+      "0.65",
+      "0.68",
+      "0.69",
+      "0.71",
+      "0.75",
+      "0.76",
+      "0.77",
+      "0.8",
+      "0.82",
+      "0.87",
+      "0.88",
+      "0.9",
+      "0.92"
+    ],
+    "emitted_excerpt": "\n# Paper Table 1  (14-variable consistent panel; theta_C = 0.8 for Cross Validation; new API calls = 0)\n\nMethod                             R     P     F1     Off  hits  FA\n----------------------------------------------------------------\nLLM only                        0.77  0.87   0.82    +3.1    20   3\nPELT                            0.58  0.65   0.61   +10.6    15   8\nBinSeg                          0.65  0.71   0.68    +8.2    17   7\nBai-Perron                      0.62  0.64   0.63   +14.8    16   9\nPCMCI                           0.35  0.69   0.46   -10.0     9   4\nCross Validation + PELT         0.92  0.65   0.76    -0.2    24  13\nCross Validation + BinSeg       0.88  0.56   0.69    -2.7    23  18\nCross Validation + Bai-Perron   0.92  0.63   0.75    -1.0    24  14\nCross Validation + PCMCI        0.88  0.77   0.82    +0.9    23   7 *\n----------------------------------------------------------------\n* = best F1.  R/P/F1 computed directly from raw counts (exact 2-dp).\nStandalone PELT/BinSeg/Bai-Perron/PCMCI = data-only baselines;\nCross Validation = our detector-agnostic pipeline on the same panel.\n",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2602.00080",
+    "title": "The GT-Score: A Robust Objective Function for Reducing Overfitting in Data-Driven Trading Strategies",
+    "code_url": "https://github.com/shep-analytics/gt_score",
+    "entrypoint_source": "readme",
+    "paper_claims": [
+      {
+        "value": "50",
+        "context": "normal return distributions. Using historical stock data for 50 S"
+      },
+      {
+        "value": "500",
+        "context": "P 500 companies spanning"
+      },
+      {
+        "value": "15",
+        "context": "ith nine sequential time splits and a Monte Carlo study with 15 random seeds across three trading strate"
+      },
+      {
+        "value": "98",
+        "context": "tion ratio (validation return divided by training return) by 98% relative to baseline objective function"
+      }
+    ],
+    "emitted_numbers": [
+      "0.00"
+    ],
+    "emitted_excerpt": "Fetching asset data...\nFetching 122 assets from 2010-01-01 to 2024-12-31...\nSkipping AAPL - no data\nSkipping MSFT - no data\nSkipping GOOGL - no data\nSkipping AMZN - no data\nSkipping NVDA - no data\nSkipping META - no data\nSkipping BRK-B - no data\nSkipping TSLA - no data\nSkipping UNH - no data\nSkipping LLY - no data\nSkipping JPM - no data\nSkipping V - no data\nSkipping XOM - no data\nSkipping JNJ - no data\nSkipping MA - no data\nSkipping AVGO - no data\nSkipping PG - no data\nSkipping HD - no data\nSkipping CVX - no data\nSkipping MRK - no data\nSkipping COST - no data\nSkipping ABBV - no data\nSkipping PEP - no data\nSkipping KO - no data\nSkipping ADBE - no data\nSkipping WMT - no data\nSkipping MCD - no data\nSkipping CRM - no data\nSkipping CSCO - no data\nSkipping BAC - no data\nSkipping TMO - no data\nSkipping ACN - no data\nSkipping NFLX - no data\nSkipping AMD - no data\nSkipping LIN - no data\nSkipping ABT - no data\nSkipping ORCL - no data\nSkipping DHR - no data\nSkipping INTC - no data\nSkipping DIS - no data\nSkipping WFC - no data\nSkipping VZ - no data\nSkipping PM - no data\nSkipping INTU - no data\nSkipping CMCSA - no data\nSkipping NKE - no data\nSkipping RTX - no data\nSkipping TXN - no data\nSkipping IBM - no data\nSkipping QCOM - no data\nSkipping NOW - no data\nSkipping SPGI - no data\nSkipping HON - no data\nSkipping AMGN - no data\nSkipping GE - no data\nSkipping CAT - no data\nSkipping AMAT - no data\nSkipping PFE - no data\nSkipping LOW - no data\nSkipping UNP - no data\nSkipping GS - no data\nSkipping BKNG - no data\nSkipping ISRG - no data\nSkipping ELV - no data\nSkipping MS - no data\nSkipping MDT - no data\nSkipping T - no data\nSkipping SYK - no data\nSkipping ADP - no data\nSkipping BLK - no data\nSkipping VRTX - no data\nSkipping DE - no data\nSkipping GILD - no data\nSkipping C - no data\nSkipping REGN - no data\nSkipping ZTS - no data\nSkipping ADI - no data\nSkipping LRCX - no data\nSkipping SCHW - no data\nSkipping MMC - no data\nSkipping CB - no data\nSkipping MO - no data\nSkipping PANW - no data\n",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2411.08726",
+    "title": "Analyst Reports and Stock Performance: Evidence from the Chinese Market",
+    "code_url": "https://github.com/fxsjy/jieba",
+    "entrypoint_source": "convention",
+    "paper_claims": [],
+    "emitted_numbers": [
+      "0.13920178509021275",
+      "0.14596045237787234",
+      "0.1475057117057447",
+      "0.16734460041382979",
+      "0.1712441526",
+      "0.17180164988510638",
+      "0.17541884768425534",
+      "0.1914421623587234",
+      "0.19389757253595744",
+      "0.19480309624702127",
+      "0.19900979900382978",
+      "0.25435675538085106",
+      "0.2642762173558316",
+      "0.2693488779295851",
+      "0.2781657628445476",
+      "0.27883620861218145",
+      "0.2807830798576574",
+      "0.29000519464085045",
+      "0.29580869172394825",
+      "0.303540981053475",
+      "0.3035777049319588",
+      "0.3077929164033088",
+      "0.3092230992619838",
+      "0.33582401985234045",
+      "0.3392722481859574"
+    ],
+    "emitted_excerpt": "========================================\n1. \u5206\u8bcd\n----------------------------------------\nFull Mode: \u6211/ \u6765\u5230/ \u5317\u4eac/ \u6e05\u534e/ \u6e05\u534e\u5927\u5b66/ \u534e\u5927/ \u5927\u5b66\nDefault Mode: \u6211/ \u6765\u5230/ \u5317\u4eac/ \u6e05\u534e\u5927\u5b66\n\u4ed6, \u6765\u5230, \u4e86, \u7f51\u6613, \u676d\u7814, \u5927\u53a6\n\u5c0f\u660e, \u7855\u58eb, \u6bd5\u4e1a, \u4e8e, \u4e2d\u56fd, \u79d1\u5b66, \u5b66\u9662, \u79d1\u5b66\u9662, \u4e2d\u56fd\u79d1\u5b66\u9662, \u8ba1\u7b97, \u8ba1\u7b97\u6240, \uff0c, \u540e, \u5728, \u65e5\u672c, \u4eac\u90fd, \u5927\u5b66, \u65e5\u672c\u4eac\u90fd\u5927\u5b66, \u6df1\u9020\n========================================\n2. \u6dfb\u52a0\u81ea\u5b9a\u4e49\u8bcd\u5178/\u8c03\u6574\u8bcd\u5178\n----------------------------------------\n\u5982\u679c/\u653e\u5230/post/\u4e2d\u5c06/\u51fa\u9519/\u3002\n494\n\u5982\u679c/\u653e\u5230/post/\u4e2d/\u5c06/\u51fa\u9519/\u3002\n\u300c/\u53f0/\u4e2d/\u300d/\u6b63\u786e/\u5e94\u8be5/\u4e0d\u4f1a/\u88ab/\u5207\u5f00\n69\n\u300c/\u53f0\u4e2d/\u300d/\u6b63\u786e/\u5e94\u8be5/\u4e0d\u4f1a/\u88ab/\u5207\u5f00\n========================================\n3. \u5173\u952e\u8bcd\u63d0\u53d6\n----------------------------------------\n TF-IDF\n----------------------------------------\n\u6b27\u4e9a 0.7300142700289363\n\u5409\u6797 0.659038184373617\n\u7f6e\u4e1a 0.4887134522112766\n\u4e07\u5143 0.3392722481859574\n\u589e\u8d44 0.33582401985234045\n4.3 0.25435675538085106\n7000 0.25435675538085106\n2013 0.25435675538085106\n139.13 0.25435675538085106\n\u5b9e\u73b0 0.19900979900382978\n\u7efc\u5408\u4f53 0.19480309624702127\n\u7ecf\u8425\u8303\u56f4 0.19389757253595744\n\u4ebf\u5143 0.1914421623587234\n\u5728\u5efa 0.17541884768425534\n\u5168\u8d44 0.17180164988510638\n\u6ce8\u518c\u8d44\u672c 0.1712441526\n\u767e\u8d27 0.16734460041382979\n\u96f6\u552e 0.1475057117057447\n\u5b50\u516c\u53f8 0.14596045237787234\n\u8425\u4e1a 0.13920178509021275\n----------------------------------------\n TextRank\n----------------------------------------\n\u5409\u6797 1.0\n\u6b27\u4e9a 0.9966893354178172\n\u7f6e\u4e1a 0.6434360313092776\n\u5b9e\u73b0 0.5898606692859626\n\u6536\u5165 0.43677859947991454\n\u589e\u8d44 0.4099900531283276\n\u5b50\u516c\u53f8 0.35678295947672795\n\u57ce\u5e02 0.34971383667403655\n\u5546\u4e1a 0.34817220716026936\n\u4e1a\u52a1 0.3092230992619838\n\u5728\u5efa 0.3077929164033088\n\u8425\u4e1a 0.3035777049319588\n\u5168\u8d44 0.303540981053475\n\u7efc\u5408\u4f53 0.29580869172394825\n\u6ce8\u518c\u8d44\u672c 0.29000519464085045\n\u6709\u9650\u516c\u53f8 0.2807830798576574\n\u96f6\u552e 0.27883620861218145\n\u767e\u8d27 0.2781657628445476\n\u5f00\u53d1 0.2693488779295851\n\u7ecf\u8425\u8303\u56f4 0.2642762173558316\n========================================\n4. \u8bcd\u6027\u6807\u6ce8\n----------------------------------------\n\u6211 r\n\u7231 v\n\u5317\u4eac ns\n\u5929\u5b89\u95e8 ns\n========================================\n6. Tokenize: \u8fd4\u56de\u8bcd\u8bed\u5728\u539f\u6587\u7684\u8d77\u6b62\u4f4d\u7f6e\n----------------------------------------\n \u9ed8\u8ba4\u6a21\u5f0f\n----------------------------------------\nword \u6c38\u548c\t\t start: 0 \t\t end:2\nword \u670d\u88c5\t\t start: 2 \t\t end:4\nword \u9970\u54c1\t\t start: 4 \t\t end:6\nword \u6709\u9650\u516c\u53f8\t\t start: 6 \t\t end:10\n----------------------------------------\n ",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2506.07315",
+    "title": "Towards Competent AI for Fundamental Analysis in Finance: A Benchmark Dataset and Evaluation",
+    "code_url": "https://github.com/SAIFS-AIHub/FinAR-Bench",
+    "entrypoint_source": "readme",
+    "paper_claims": [],
+    "emitted_numbers": [],
+    "emitted_excerpt": "Error initializing API client for model gpt-4o: No API key found for model gpt-4o. Please provide an API key.\nTraceback (most recent call last):\n  File \"/work/model_configs.py\", line 438, in init_api_client\n    raise ValueError(f\"No API key found for model {model_name}. Please provide an API key.\")\nValueError: No API key found for model gpt-4o. Please provide an API key.\n\n",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2410.23296",
+    "title": "Generalized Distribution Prediction for Asset Returns",
+    "code_url": "https://github.com/izzak98/dist-pred",
+    "entrypoint_source": "readme",
+    "paper_claims": [
+      {
+        "value": "98",
+        "context": "icantly outperforms a linear quantile regression baseline by 98% and a dense neural network model by ove"
+      },
+      {
+        "value": "50",
+        "context": "and a dense neural network model by over 50% , showcasing its ability to capture comp"
+      }
+    ],
+    "emitted_numbers": [],
+    "emitted_excerpt": "",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  },
+  {
+    "key": "2509.00232",
+    "title": "Feature Augmentations for High-Dimensional Learning",
+    "code_url": "https://github.com/fxsjy/jieba",
+    "entrypoint_source": "convention",
+    "paper_claims": [],
+    "emitted_numbers": [
+      "0.13920178509021275",
+      "0.14596045237787234",
+      "0.1475057117057447",
+      "0.16734460041382979",
+      "0.1712441526",
+      "0.17180164988510638",
+      "0.17541884768425534",
+      "0.1914421623587234",
+      "0.19389757253595744",
+      "0.19480309624702127",
+      "0.19900979900382978",
+      "0.25435675538085106",
+      "0.2642762173558316",
+      "0.2693488779295851",
+      "0.2781657628445476",
+      "0.27883620861218145",
+      "0.2807830798576574",
+      "0.29000519464085045",
+      "0.29580869172394825",
+      "0.303540981053475",
+      "0.3035777049319588",
+      "0.3077929164033088",
+      "0.3092230992619838",
+      "0.33582401985234045",
+      "0.3392722481859574"
+    ],
+    "emitted_excerpt": "========================================\n1. \u5206\u8bcd\n----------------------------------------\nFull Mode: \u6211/ \u6765\u5230/ \u5317\u4eac/ \u6e05\u534e/ \u6e05\u534e\u5927\u5b66/ \u534e\u5927/ \u5927\u5b66\nDefault Mode: \u6211/ \u6765\u5230/ \u5317\u4eac/ \u6e05\u534e\u5927\u5b66\n\u4ed6, \u6765\u5230, \u4e86, \u7f51\u6613, \u676d\u7814, \u5927\u53a6\n\u5c0f\u660e, \u7855\u58eb, \u6bd5\u4e1a, \u4e8e, \u4e2d\u56fd, \u79d1\u5b66, \u5b66\u9662, \u79d1\u5b66\u9662, \u4e2d\u56fd\u79d1\u5b66\u9662, \u8ba1\u7b97, \u8ba1\u7b97\u6240, \uff0c, \u540e, \u5728, \u65e5\u672c, \u4eac\u90fd, \u5927\u5b66, \u65e5\u672c\u4eac\u90fd\u5927\u5b66, \u6df1\u9020\n========================================\n2. \u6dfb\u52a0\u81ea\u5b9a\u4e49\u8bcd\u5178/\u8c03\u6574\u8bcd\u5178\n----------------------------------------\n\u5982\u679c/\u653e\u5230/post/\u4e2d\u5c06/\u51fa\u9519/\u3002\n494\n\u5982\u679c/\u653e\u5230/post/\u4e2d/\u5c06/\u51fa\u9519/\u3002\n\u300c/\u53f0/\u4e2d/\u300d/\u6b63\u786e/\u5e94\u8be5/\u4e0d\u4f1a/\u88ab/\u5207\u5f00\n69\n\u300c/\u53f0\u4e2d/\u300d/\u6b63\u786e/\u5e94\u8be5/\u4e0d\u4f1a/\u88ab/\u5207\u5f00\n========================================\n3. \u5173\u952e\u8bcd\u63d0\u53d6\n----------------------------------------\n TF-IDF\n----------------------------------------\n\u6b27\u4e9a 0.7300142700289363\n\u5409\u6797 0.659038184373617\n\u7f6e\u4e1a 0.4887134522112766\n\u4e07\u5143 0.3392722481859574\n\u589e\u8d44 0.33582401985234045\n4.3 0.25435675538085106\n7000 0.25435675538085106\n2013 0.25435675538085106\n139.13 0.25435675538085106\n\u5b9e\u73b0 0.19900979900382978\n\u7efc\u5408\u4f53 0.19480309624702127\n\u7ecf\u8425\u8303\u56f4 0.19389757253595744\n\u4ebf\u5143 0.1914421623587234\n\u5728\u5efa 0.17541884768425534\n\u5168\u8d44 0.17180164988510638\n\u6ce8\u518c\u8d44\u672c 0.1712441526\n\u767e\u8d27 0.16734460041382979\n\u96f6\u552e 0.1475057117057447\n\u5b50\u516c\u53f8 0.14596045237787234\n\u8425\u4e1a 0.13920178509021275\n----------------------------------------\n TextRank\n----------------------------------------\n\u5409\u6797 1.0\n\u6b27\u4e9a 0.9966893354178172\n\u7f6e\u4e1a 0.6434360313092776\n\u5b9e\u73b0 0.5898606692859626\n\u6536\u5165 0.43677859947991454\n\u589e\u8d44 0.4099900531283276\n\u5b50\u516c\u53f8 0.35678295947672795\n\u57ce\u5e02 0.34971383667403655\n\u5546\u4e1a 0.34817220716026936\n\u4e1a\u52a1 0.3092230992619838\n\u5728\u5efa 0.3077929164033088\n\u8425\u4e1a 0.3035777049319588\n\u5168\u8d44 0.303540981053475\n\u7efc\u5408\u4f53 0.29580869172394825\n\u6ce8\u518c\u8d44\u672c 0.29000519464085045\n\u6709\u9650\u516c\u53f8 0.2807830798576574\n\u96f6\u552e 0.27883620861218145\n\u767e\u8d27 0.2781657628445476\n\u5f00\u53d1 0.2693488779295851\n\u7ecf\u8425\u8303\u56f4 0.2642762173558316\n========================================\n4. \u8bcd\u6027\u6807\u6ce8\n----------------------------------------\n\u6211 r\n\u7231 v\n\u5317\u4eac ns\n\u5929\u5b89\u95e8 ns\n========================================\n6. Tokenize: \u8fd4\u56de\u8bcd\u8bed\u5728\u539f\u6587\u7684\u8d77\u6b62\u4f4d\u7f6e\n----------------------------------------\n \u9ed8\u8ba4\u6a21\u5f0f\n----------------------------------------\nword \u6c38\u548c\t\t start: 0 \t\t end:2\nword \u670d\u88c5\t\t start: 2 \t\t end:4\nword \u9970\u54c1\t\t start: 4 \t\t end:6\nword \u6709\u9650\u516c\u53f8\t\t start: 6 \t\t end:10\n----------------------------------------\n ",
+    "verdict": "",
+    "matched_value": "",
+    "justification": ""
+  }
+]
