@@ -60,6 +60,27 @@ NON_ENTRYPOINTS = frozenset({
     "_version.py",
 })
 
+#: Directories whose contents are never the paper's analysis. Test suites and
+#: example scripts exercise the code rather than producing the result, and
+#: vendored dependencies are not the authors' code at all: two repositories in
+#: this corpus shipped a copy of a Chinese-tokenisation library, and its bundled
+#: `test/demo.py` was selected as the entry point, so the harness recorded the
+#: library's demo output as though the paper's pipeline had run.
+NON_ENTRYPOINT_DIRS = frozenset({
+    "test", "tests", "testing",
+    "example", "examples", "demo", "demos",
+    "vendor", "vendored", "third_party", "thirdparty", "external", "extern",
+    "node_modules", "site-packages", "dist-packages",
+    "docs", "doc", "build",
+})
+
+
+def _in_excluded_dir(path: Path, repo: Path) -> bool:
+    """Whether any directory component of `path` is one we never run from."""
+    rel = path.relative_to(repo)
+    return any(part.lower() in NON_ENTRYPOINT_DIRS for part in rel.parts[:-1])
+
+
 #: Artefact extensions that count as "produced output" at rung 9.
 ARTEFACT_SUFFIXES = {".csv", ".json", ".parquet", ".png", ".pdf", ".txt", ".pkl", ".npy"}
 
@@ -338,7 +359,12 @@ def entrypoint_from_readme(repo: Path) -> Entrypoint | None:
                     return Entrypoint(["python", "-m", module], "readme", line)
                 continue
             target = next((p for p in parts[1:] if p.endswith(".py")), None)
-            if target and (repo / target).is_file() and Path(target).name not in NON_ENTRYPOINTS:
+            if (
+                target
+                and (repo / target).is_file()
+                and Path(target).name not in NON_ENTRYPOINTS
+                and not _in_excluded_dir(repo / target, repo)
+            ):
                 return Entrypoint(["python", target], "readme", line)
             continue
 
@@ -370,7 +396,10 @@ def entrypoint_by_convention(repo: Path) -> Entrypoint | None:
         if candidate.is_file() and name not in NON_ENTRYPOINTS:
             return _mk(candidate)
     for name in ENTRYPOINT_CANDIDATES:
-        matches = sorted(p for p in repo.glob(f"*/{name}") if p.name not in NON_ENTRYPOINTS)
+        matches = sorted(
+            p for p in repo.glob(f"*/{name}")
+            if p.name not in NON_ENTRYPOINTS and not _in_excluded_dir(p, repo)
+        )
         if matches:
             return _mk(matches[0])
     top_level = [

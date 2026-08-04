@@ -128,3 +128,38 @@ def test_readme_used_only_when_convention_fails(tmp_path: Path) -> None:
 
 def test_missing_readme_is_not_an_error(tmp_path: Path) -> None:
     assert entrypoint_from_readme(tmp_path) is None
+
+
+def test_vendored_test_demo_is_not_an_entrypoint(tmp_path: Path) -> None:
+    """Regression guard for a real corpus defect.
+
+    Two papers shipped a vendored Chinese-tokenisation library. Its bundled
+    `test/demo.py` matched the entry-point heuristic, so the harness executed the
+    library's demo and recorded its output as though the paper's pipeline had
+    produced it. A script under test/ is not the analysis, and a vendored one is
+    not even the authors' code.
+    """
+    (tmp_path / "test").mkdir()
+    (tmp_path / "test" / "demo.py").write_text("print('vendored demo')")
+    assert find_entrypoint(tmp_path, use_readme=False) is None
+
+
+def test_excluded_dirs_cover_vendor_and_examples(tmp_path: Path) -> None:
+    for d in ("vendor", "third_party", "examples", "node_modules", "docs"):
+        (tmp_path / d).mkdir()
+        (tmp_path / d / "main.py").write_text("print(1)")
+    assert find_entrypoint(tmp_path, use_readme=False) is None
+
+
+def test_a_real_subdirectory_entrypoint_still_works(tmp_path: Path) -> None:
+    """The exclusion must not swallow legitimate nested entry points."""
+    (tmp_path / "experiments").mkdir()
+    (tmp_path / "experiments" / "run_all.py").write_text("print(1)")
+    e = find_entrypoint(tmp_path, use_readme=False)
+    assert e is not None and e.argv == ["python", "experiments/run_all.py"]
+
+
+def test_readme_command_pointing_into_tests_is_refused(tmp_path: Path) -> None:
+    repo = _repo(tmp_path, "```\npython tests/demo.py\n```\n",
+                 {"tests/demo.py": "print(1)"})
+    assert entrypoint_from_readme(repo) is None

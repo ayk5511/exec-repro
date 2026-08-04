@@ -53,9 +53,9 @@ through rung 6, which are decided before any entry-point heuristic applies.}
 4  & \texttt{CLONED}             & 427 & 93.0  & 427 & 93.0 \\
 5  & \texttt{DEPS\_DECLARED}     & 251 & 54.7  & 251 & 54.7 \\
 6  & \texttt{ENV\_BUILDS}        & 127 & 27.7  & 127 & 27.7 \\
-7  & \texttt{ENTRYPOINT\_FOUND}  & 66  & 14.4  & 41  & 8.9 \\
-8  & \texttt{RUNS}               & 11  & 2.4   & 6   & 1.3 \\
-9  & \texttt{PRODUCES\_OUTPUT}   & 9   & 2.0   & 4   & 0.9 \\
+7  & \texttt{ENTRYPOINT\_FOUND}  & 64  & 13.9  & 39  & 8.5 \\
+8  & \texttt{RUNS}               & 9   & 2.0   & 4   & 0.9 \\
+9  & \texttt{PRODUCES\_OUTPUT}   & 7   & 1.5   & 2   & 0.4 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -106,7 +106,7 @@ Rung & Reason & $n$ \\
                            & \texttt{non\_python\_toolchain\_required}& 5 \\
                            & \texttt{python\_version\_unsupported}    & 2 \\
 \midrule
-\texttt{ENTRYPOINT\_FOUND} & \texttt{no\_entrypoint\_identifiable}    & 61 \\
+\texttt{ENTRYPOINT\_FOUND} & \texttt{no\_entrypoint\_identifiable}    & 63 \\
 \midrule
 \texttt{RUNS}              & \texttt{runtime\_exception}              & 32 \\
                            & \texttt{missing\_data\_file}             & 16 \\
@@ -137,9 +137,9 @@ our connectivity: the artefact as released does not carry what it needs.
 
 Identifying what to run is the most discretionary step, so the study is run in two
 configurations. Restricting to conventionally named scripts finds an entry point
-in 41 repositories; additionally accepting a command documented in the
-repository's own README finds 66. The looser specification raises the number that
-execute from 6 to 11 and the number that emit output from 4 to 9.
+in 39 repositories; additionally accepting a command documented in the
+repository's own README finds 64. The looser specification raises the number that
+execute from 4 to 9 and the number that emit output from 2 to 7.
 
 The two configurations agree exactly on rungs 2 through 6, which are decided
 before any entry-point logic runs. That agreement is checked by the audit script
@@ -149,29 +149,39 @@ the campaign was not deterministic and no figure above could be quoted.
 The gap between the columns is the honest measure of how much of the upper curve
 is our conservatism rather than the literature's. It is large in relative terms
 and small in absolute terms: on either specification, fewer than one paper in
-forty executes to completion unassisted.
+fifty executes to completion unassisted.
 
 \subsection{Replication on an independent sample}\label{sec:replication}
 
 An earlier campaign scored a 154-paper sample drawn only from the q-fin
-categories. The present corpus is three times larger and includes papers reached
-through the general machine-learning categories, which the earlier sample could
-not see. The two agree closely: dependency declaration 53.2\% against 54.7\%,
-environment construction 26.6\% against 27.7\%, and execution 2.6\% against
-2.4\%.
+categories. The present corpus is three times larger and reaches papers through
+the general machine-learning categories, which the earlier sample could not see.
 
-Because the second sample is larger and differently sourced, this is evidence
-that the shape of the curve is a property of the literature rather than of the
-particular papers first drawn.
+The comparison is restricted to rungs 2 through 6, which are decided before any
+entry-point logic applies and are therefore unaffected by the heuristic revisions
+made between the two campaigns. On those rungs the samples agree closely:
+resolution 92.2\% against 94.8\%, cloning 87.7\% against 93.0\%, dependency
+declaration 53.2\% against 54.7\%, and environment construction 26.6\% against
+27.7\%. Both of the paper's principal findings, the size of the declaration drop
+and the size of the construction drop, sit inside this range.
+
+We do not claim replication above rung 6. The two campaigns used different
+entry-point rules, the later one stricter, so the upper figures are not
+like-for-like and the difference between them measures our revision rather than
+the literature.
+
+Because the second sample is larger and differently sourced, the agreement on the
+mechanically determined rungs is evidence that the shape of the curve is a
+property of the literature rather than of the particular papers first drawn.
 
 \subsection{Rung 10}\label{sec:rung10_results}
 
-Nine repositories produced output and are therefore eligible for the final rung,
-which asks whether an emitted number matches a headline number in the paper. Nine
+Seven repositories produced output and are therefore eligible for the final rung,
+which asks whether an emitted number matches a headline number in the paper. Seven
 is too few to support a rate, and we report no percentage for rung 10. The
 worksheet pairing each artefact's captured stdout with its paper's numeric claims
 is released with the corpus so the adjudication can be inspected and disputed.
 
-That the sample thins to nine from 459 is itself the finding: the question the
+That the sample thins to seven from 459 is itself the finding: the question the
 rung was designed to answer is, for this corpus, almost entirely unanswerable,
 because almost nothing gets far enough to ask it of.

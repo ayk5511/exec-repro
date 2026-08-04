@@ -24,13 +24,13 @@ not the ones that make an author more careful at submission.
 
 \subsection{What the curve licenses us to say}\label{sec:claim_scope}
 
-The measured quantity is narrow and worth stating precisely. Of 154
+The measured quantity is narrow and worth stating precisely. Of 459
 quantitative-finance machine-learning papers that advertise a code repository,
-four produced output when a stranger cloned the repository, built the declared
+seven produced output when a stranger cloned the repository, built the declared
 environment in a container, and ran the documented entry point without
 correspondence, manual repair, or reading beyond the README.
 
-That is not a claim that the other 150 papers are wrong, and it is not a
+That is not a claim that the other 452 papers are wrong, and it is not a
 replication failure rate. It is a statement about artefacts, not findings: the
 released code, as released, does not run unassisted on a current platform.
 Several of the failures are ones an author could resolve in a message and a
@@ -46,8 +46,8 @@ sample to work with.
 
 The practical value of an ordered ladder is that it localises the loss, and the
 location is not where the reproducibility discourse usually points. Link rot,
-the most-discussed failure, accounts for 7.8\%. The two large drops are
-environment declaration (53 repositories ship no dependency specification) and
+the most-discussed failure, accounts for 5.2\%. The two large drops are
+environment declaration (176 repositories ship no dependency specification) and
 environment construction (half of those that declare one no longer install).
 
 These have different remedies. The first is a submission-time omission and is
@@ -82,13 +82,13 @@ be dated, which is part of why the harness is released rather than only the
 numbers.
 
 \emph{Time and resource budgets bind.} Execution is capped at fifteen minutes per
-artefact on two allocated cores without a GPU. Two repositories hit that ceiling
+artefact on two allocated cores without a GPU. Four repositories hit that ceiling
 and are recorded as timeouts, not failures of a different kind. An artefact whose
 honest runtime is a day on a cluster is not distinguishable here from one that
 hangs.
 
 \emph{Rung 10 is human-scored.} The final rung reflects one scorer's judgement
-about whether an emitted number corresponds to a published claim. With four
+about whether an emitted number corresponds to a published claim. With seven
 eligible artefacts this is disclosed as adjudication rather than measurement, and
 the worksheet is released so that the judgements can be checked.
 

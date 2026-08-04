@@ -119,6 +119,17 @@ restrictions: the command must name a target that exists in the repository, it
 must not be an installation or testing step, and it must not be a compound shell
 pipeline, since those cannot be reproducibly parsed.
 
+Both routes exclude directories whose contents are never the analysis: test
+suites, example folders, documentation, and vendored dependencies. That exclusion
+is not hypothetical tidiness. Two repositories in this corpus ship a copy of a
+Chinese-tokenisation library, and its bundled \texttt{test/demo.py} satisfied the
+naming heuristic; the harness executed the library's demo and recorded its output
+as though the paper's pipeline had produced it. Both were counted at the top of
+the ladder until the outputs were read and found to be identical to each other
+and unrelated to either paper. Running a repository's tests is also not running
+its analysis, which is why a documented \texttt{pytest} invocation is refused as
+an entry point.
+
 Both configurations are run over the whole corpus and both curves are reported
 (\Cref{sec:sensitivity}). Neither matches a determined human who would read the
 source and infer the intended invocation, so both are lower bounds; reporting the
