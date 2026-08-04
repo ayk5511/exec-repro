@@ -40,29 +40,52 @@ executability without anyone touching it.
 
 \subsection{Execution-based studies}\label{sec:exec_studies}
 
-Studies that actually run published code exist in computer science, where the
-artefact-evaluation committees of systems and programming-languages conferences
-have institutionalised the practice, and where the associated literature reports
-substantial attrition between artefacts that are advertised and artefacts that
-build and run. That work is our closest methodological relative.
+Two lines of work already run published code, and the present study is defined by
+how it differs from each.
 
-Two things distinguish the present study. First, quantitative finance has no
-artefact-evaluation tradition: the venues that publish machine-learning finance
-research do not, in general, run submitted code, so there is no institutional
-record of what fraction of the literature is executable. Second, artefact
-evaluation is a \emph{pass/fail} judgement made by a human reviewer who may
-correspond with the authors. Our measurement is deliberately unassisted and
-graded: no correspondence, no manual repair, and a recorded stopping point rather
-than a verdict. That makes it weaker evidence about any individual paper and
-better evidence about the distribution.
+The first is at scale but outside finance. \citet{Trisovic2022} took more than
+2,000 replication datasets from the Harvard Dataverse, comprising over 9,000 R
+files, and executed them in a clean environment: 74\% of files failed on first
+execution, falling to 56\% after automated code cleaning. That is the closest
+methodological relative to what we do, and it establishes that large-scale
+unassisted execution is both feasible and informative. It is confined to R and to
+deposited replication packages rather than to repositories advertised in papers,
+and it reports a single failure rate rather than locating where in the pipeline
+the failure occurred.
+
+The second is in finance but under very different conditions.
+\citet{Perignon2024} ran the code of 168 research teams answering six
+prespecified questions, and found that running that code on the same raw data
+regenerates exactly the same results only 52\% of the time. This is the
+definitive finance result on computational reproducibility, and it is a
+\emph{best-case} measurement by construction: the code was written by
+participating teams for the purpose, the raw data were supplied, and the study
+was coordinated. Those are precisely the conditions an ordinary reader of a
+published paper does not have.
+
+Computer science has also institutionalised artefact evaluation at systems and
+security venues, where committees run submitted artefacts and report substantial
+attrition between what is advertised and what builds. That work is a human,
+pass/fail judgement made by a reviewer who may correspond with the authors, which
+makes it stronger evidence about an individual artefact and weaker evidence about
+a distribution.
 
 \subsection{What is new here}\label{sec:novelty}
 
-Against that background the contribution is threefold. The ladder supplies an
-ordered scale where the field has used pass/fail or additive scores, so attrition
-becomes visible as a curve with a diagnosable shape. The closed failure
-vocabulary makes the \emph{reasons} for attrition a reportable table rather than
-a narrative. And the harness is released as an instrument, which matters because
-the quantity being measured decays: a corpus scored today will score differently
-in two years as packages are yanked and repositories are archived, and a study
-that cannot be re-run cannot track that.
+The gap this paper fills is the unassisted, cold-start case in finance: not code
+supplied for a coordinated study with data attached, but whatever a published
+paper points a reader to, retrieved from that pointer, on a clean machine, with
+no data supplied and no author contact. Read against \citet{Perignon2024}, the
+question is not whether finance code reproduces under favourable conditions, but
+how much of that 52\% survives the removal of the favourable conditions.
+
+Three things are new. The ladder supplies an ordered scale where the literature
+has used pass/fail or a single rate, so attrition becomes a curve with a
+diagnosable shape rather than one number: our result is not simply that little
+runs, but that most of the loss occurs at environment declaration and
+construction rather than at link rot or at execution itself. The closed failure
+vocabulary makes the \emph{reasons} a reportable table rather than a narrative.
+And the harness is released as an instrument, which matters because the quantity
+decays: a corpus scored today will score lower in two years as packages are
+yanked and repositories are archived, and a study that cannot be re-run cannot
+track that.

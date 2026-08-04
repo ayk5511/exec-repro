@@ -1,6 +1,9 @@
 \section{Introduction}\label{sec:intro}
 
-A reader who wants to build on a published empirical result has a concrete task:
+Machine learning is now a core empirical methodology in quantitative finance
+\citep{GuKellyXiu2020}, which makes its results unusually dependent on code: the
+method is the implementation, and a description in prose rarely determines it.
+A reader who wants to build on such a result therefore has a concrete task:
 obtain the authors' code, install what it needs, run it, and see whether the
 numbers come out. Almost everything the reproducibility literature measures is
 upstream of that task. Instruments count whether a paper states that code is
@@ -15,10 +18,16 @@ disclose exemplary metadata, a repository link, a licence, a
 no longer resolve, because the entry point expects a data file that was never
 shipped, or because the repository was deleted after publication. Conversely a
 sparse repository with no formal environment specification may run without
-incident. Disclosure predicts executability imperfectly, and no published study
-in quantitative finance has measured the second quantity directly.
+incident.
 
-This paper measures it. We take a corpus of machine-learning papers in
+Finance does have a direct measurement of computational reproducibility.
+\citet{Perignon2024} ran the code of 168 research teams on the same raw data and
+found that it regenerates exactly the same results 52\% of the time. That figure
+is a best case by construction: the code was written for a coordinated study, the
+data were supplied, and the teams were reachable. A reader of a published paper
+has none of those advantages. They have a URL.
+
+This paper measures the cold-start case. We take a corpus of machine-learning papers in
 quantitative finance, extract every code URL the authors advertise, and attempt
 to run what we find: resolve the link, clone the repository, build the declared
 environment inside a container, locate an entry point, and execute it under a
