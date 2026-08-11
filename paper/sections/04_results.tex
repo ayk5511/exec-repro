@@ -195,12 +195,21 @@ the analysis ran on an empty universe. One terminated on a missing API key, and
 the captured output is that error. One ran a data-acquisition step that wrote
 files and printed nothing.
 
-The single \emph{match} is instructive about what success looks like. The
-repository documents \texttt{finalscripts/table1.py}, the script announces its
-output as the paper's Table 1, and it prints the per-method precision, recall and
-F1 figures that table contains, on the same 14-variable panel the abstract
-describes. One artefact in 459 regenerated a published table on a clean machine
-without contacting anyone.
+The single \emph{match} is instructive about what success looks like, and it was
+checked against the published table rather than taken on the script's word. The
+repository documents \texttt{finalscripts/table1.py}; running it regenerates the
+paper's Table 1 in full, on the same 14-variable panel, and every one of the
+thirty-six reported values agrees exactly: recall, precision, $F_1$ and mean
+signed offset for all nine methods, from \texttt{LLM only} at
+$0.77/0.87/0.82/{+}3.1$ through the four data-only baselines to the four
+cross-validated variants, ending at $0.88/0.77/0.82/{+}0.9$. The best $F_1$ of
+0.82 is the figure the abstract headlines. Presentation differs without
+disagreeing: the manuscript labels the combined rows differently from the script,
+reports an $F_2$ column the script omits, and omits the raw hit and false-alarm
+counts the script prints.
+
+One artefact in 459 regenerated a published table on a clean machine, from the
+URL the paper gives its readers, without contacting anyone.
 
 That the sample thins from 459 to seven, and from seven to one, is itself the
 finding: the question the rung was designed to answer is, for this corpus, very
