@@ -168,6 +168,12 @@ class LadderResult:
     #: number matches the paper, which cannot be adjudicated from a summary
     #: string, so the actual output is retained for the human scorer.
     run_stdout: str = ""
+    #: Set when the advertised address did not resolve but a lexical repair of
+    #: it did, holding the original mangled string. Recorded rather than
+    #: silently overwritten so that repairs are countable: they are our
+    #: extraction defects, not the literature's link rot, and the paper reports
+    #: the two separately.
+    url_repaired_from: str | None = None
 
     def record(self, outcome: StageOutcome) -> None:
         self.stages.append(outcome)
@@ -202,6 +208,7 @@ class LadderResult:
             "key": self.key,
             "code_url": self.code_url,
             "entrypoint_source": self.entrypoint_source,
+            "url_repaired_from": self.url_repaired_from,
             "run_stdout": self.run_stdout[:8000],
             "highest_rung": int(self.highest_rung),
             "highest_rung_name": self.highest_rung.name,
@@ -214,7 +221,7 @@ class LadderResult:
                     "rung_name": s.rung.name,
                     "cleared": s.cleared,
                     "reason": s.reason,
-                    "detail": s.detail[:500],
+                    "detail": s.detail[:4000],
                     "duration_s": round(s.duration_s, 2),
                 }
                 for s in self.stages

@@ -8,61 +8,72 @@ different situations, and the distance between them is the useful quantity.
 
 In the coordinated setting, code is written by a participating team knowing it
 will be run, the raw data are supplied, and the researchers are reachable. In
-ours, the artefact is whatever a published paper points its readers to, retrieved
+ours, the artifact is whatever a published paper points its readers to, retrieved
 cold, on a clean machine, with no data supplied and nobody to ask. The first
 measures whether finance code \emph{can} reproduce. The second measures whether a
 reader can get it to run at all.
 
-That the figures are 52\% and 2\% does not mean the coordinated result was
+That the figures are 52\% and 2.8\% does not mean the coordinated result was
 optimistic. It means most of what that measurement captures is supplied by
-conditions surrounding the code rather than by the artefact itself: the data, the
+conditions surrounding the code rather than by the artifact itself: the data, the
 authors' attention, the knowledge that someone will check. Strip those away and
-what remains is the artefact as released, which is what a reader inherits. The
+what remains is the artifact as released, which is what a reader inherits. The
 practical implication in \Cref{sec:where} follows directly: the interventions
-that would move our number are the ones that make an artefact self-contained,
+that would move our number are the ones that make an artifact self-contained,
 not the ones that make an author more careful at submission.
 
 \subsection{What the curve licenses us to say}\label{sec:claim_scope}
 
 The measured quantity is narrow and worth stating precisely. Of 459
 quantitative-finance machine-learning papers that advertise a code repository,
-seven produced output when a stranger cloned the repository, built the declared
-environment in a container, and ran the documented entry point without
-correspondence, manual repair, or reading beyond the README.
+thirteen executed to completion and seven produced output when a stranger cloned
+the repository, built the declared environment in a container, and ran the
+documented entry point without correspondence, manual repair, or reading beyond
+the README.
 
 That is not a claim that the other 452 papers are wrong, and it is not a
-replication failure rate. It is a statement about artefacts, not findings: the
+replication failure rate. It is a statement about artifacts, not findings: the
 released code, as released, does not run unassisted on a current platform.
 Several of the failures are ones an author could resolve in a message and a
 motivated reader in an afternoon. The claim is about the cost of that
 afternoon, multiplied across a literature.
 
-The converse also holds, and the seven adjudicated artefacts make it concrete.
+The converse also holds, and the seven adjudicated artifacts make it concrete.
 Producing output says nothing about whether the output is the paper's: two ran a
 bundled self-test on synthetic inputs, one skipped every GPU measurement the
-paper's claims depend on, one analysed an empty universe after its data fetch
+paper's claims depend on, one analyzed an empty universe after its data fetch
 returned nothing, and one printed an authentication error. Clearing rung 9
 establishes that a program ran, not that the study did.
 
 \subsection{Where the attrition actually happens}\label{sec:where}
 
-The practical value of an ordered ladder is that it localises the loss, and the
+The practical value of an ordered ladder is that it localizes the loss, and the
 location is not where the reproducibility discourse usually points. Link rot,
-the most-discussed failure, accounts for 5.2\%. The two large drops are
-environment declaration (176 repositories ship no dependency specification) and
-environment construction (half of those that declare one no longer install).
+the most-discussed failure, accounts for 4.4\%. The two large drops are
+environment declaration (180 repositories ship no dependency specification) and
+environment construction (110 of the 252 that declare one no longer install).
 
 These have different remedies. The first is a submission-time omission and is
 cheap to fix: a \texttt{requirements.txt} clears it, and an editorial checkbox
-would move the number. The second is decay, and no amount of author diligence at
-submission prevents it, because the failure is that a pinned dependency later
-left the index. Mitigating it requires artefacts that pin more than package
-versions, which in practice means a container image or a lockfile with hashes.
+would move the number.
 
-The distinction matters for policy. A journal that requires a dependency file
-addresses the larger drop immediately. A journal that wants artefacts to survive
-five years has to ask for something stronger, and should know it is asking for
-something more expensive.
+The second is harder to prescribe for, because we cannot identify its mechanism.
+A declared environment can fail to build because a pinned package has left the
+index, because a pin set no longer admits a solution, or because a source
+distribution no longer compiles, and the three are of comparable size. It is
+tempting to read all of them as aging, and \Cref{tab:cohort} does show older
+cohorts building far less often. But \Cref{sec:limitations} sets out why that
+reading is not established: a cross-section cannot separate aging from a change
+in practice, and \texttt{package\_not\_found} does not grow as a share of older
+cohorts, which is what a pure index-attrition story predicts.
+
+What can be said is weaker and still useful for policy. A journal that requires a
+dependency file addresses the larger drop immediately, and that recommendation
+does not depend on any mechanism. A journal that wants artifacts to survive five
+years needs artifacts that pin more than package versions, in practice a
+container image or a lockfile with hashes, and should know that this is a bet
+against several failure modes at once rather than a fix for one identified
+cause.
 
 \subsection{Limitations}\label{sec:limitations}
 
@@ -77,25 +88,36 @@ what a persistent reader could achieve.
 absent, and the sample is weighted toward the last two years. The curve describes
 current arXiv practice in quantitative finance.
 
-\emph{The measurement is timestamped.} Because \texttt{package\_not\_found}
-dominates the environment failures, the same corpus will score lower each year
-without a single repository changing. Any comparison against these figures must
-be dated, which is part of why the harness is released rather than only the
+\emph{The measurement is timestamped, and the direction is not established.}
+Older cohorts build markedly less often (\Cref{tab:cohort}), but a single
+cross-section cannot separate artifacts decaying with age from practice improving
+over time, and the reason mix does not support attributing the gradient to
+packages leaving the index: \texttt{package\_not\_found} is flat as a share of
+dependency-declaring repositories across cohorts. What follows is only that any
+comparison against these figures must be dated, and that establishing a decay
+rate requires re-scoring this corpus later rather than reading aging off a
+cross-section. That is part of why the harness is released rather than only the
 numbers.
 
-\emph{Time and resource budgets bind.} Execution is capped at fifteen minutes per
-artefact on two allocated cores without a GPU. Four repositories hit that ceiling
-and are recorded as timeouts, not failures of a different kind. An artefact whose
+\emph{Time and resource budgets bind.} Dependency installation is capped at
+fifteen minutes per artifact and execution at thirty, on two allocated cores and
+eight gigabytes of memory
+without a GPU. Four repositories hit that ceiling
+and are recorded as timeouts, not failures of a different kind. An artifact whose
 honest runtime is a day on a cluster is not distinguishable here from one that
 hangs.
 
-\emph{Rung 10 is human-scored.} The final rung reflects one scorer's judgement
-about whether an emitted number corresponds to a published claim. With seven
-eligible artefacts this is disclosed as adjudication rather than measurement, and
-the worksheet, including the reasoning for every verdict, is released so that the
-judgements can be checked. The \emph{match} was verified against the published
+\emph{Rung 10 is human-scored, and specification-dependent.} The final rung
+reflects one scorer's judgment about whether an emitted number corresponds to a
+published claim. With seven eligible artifacts this is disclosed as adjudication
+rather than measurement, and the worksheet, including the reasoning for every
+verdict, is released so that the judgments can be checked. The count is also not
+robust to the entry-point rule: the single match is reached only under the
+README specification, and is zero under the conservative one
+(\Cref{sec:sensitivity}). A count of one that becomes zero under a defensible
+alternative should be read as a bound, not a rate. The \emph{match} was verified against the published
 table cell by cell, all thirty-six values; the six \emph{not comparable} verdicts
-turn on what the artefact executed rather than on any numerical tolerance, which
+turn on what the artifact executed rather than on any numerical tolerance, which
 makes them easier to dispute and easier to check.
 
 \subsection{The harness as the durable contribution}\label{sec:harness_contribution}
@@ -103,7 +125,7 @@ makes them easier to dispute and easier to check.
 The numbers in \Cref{sec:results} describe one corpus at one moment. The
 instrument that produced them is the part intended to outlast the snapshot: it is
 installable, it takes any corpus of paper identifiers and code URLs, and it emits
-per-artefact records with a closed failure vocabulary.
+per-artifact records with a closed failure vocabulary.
 
 Three properties were built in because their absence would have been invisible in
 the output. Harness-attributable failures carry a distinct reason code and are
@@ -122,7 +144,7 @@ poorly placed to assume its own does.
 
 \subsection{Future work}\label{sec:future}
 
-Three extensions are supported by the released artefact. The corpus can be widened
+Three extensions are supported by the released artifact. The corpus can be widened
 beyond arXiv and beyond finance, since nothing in the ladder is domain-specific.
 The same corpus can be re-scored periodically to measure the decay rate directly,
 converting a limitation into a result. And the entry-point step can be

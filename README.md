@@ -2,7 +2,7 @@
 
 **Execution-based reproducibility measurement: run a paper's released code and record how far it gets.**
 
-Most reproducibility scoring is *static*: does the paper claim code exists, and is a URL present? That is a property of the manuscript. This package measures the *dynamic* property: clone the artefact, build its environment, run it, and record the rung at which it stops.
+Most reproducibility scoring is *static*: does the paper claim code exists, and is a URL present? That is a property of the manuscript. This package measures the *dynamic* property: clone the artifact, build its environment, run it, and record the rung at which it stops.
 
 ## The Reproducibility Attrition Ladder
 
@@ -19,12 +19,12 @@ Eleven ordered, cumulative rungs. Reaching rung N implies every rung below it wa
 | 6 | `ENV_BUILDS` | those dependencies actually install |
 | 7 | `ENTRYPOINT_FOUND` | something runnable is identifiable |
 | 8 | `RUNS` | it executes to completion, exit 0 |
-| 9 | `PRODUCES_OUTPUT` | it emitted artefacts or numbers |
+| 9 | `PRODUCES_OUTPUT` | it emitted artifacts or numbers |
 | 10 | `MATCHES_PUBLISHED` | an emitted number matches the paper |
 
 Rungs 0–9 are decided mechanically. Rung 10 requires reading the paper for a headline number, so it is scored on a manually curated subset and **never extrapolated** to the full corpus.
 
-Failures are recorded against a **closed vocabulary** of 37 reasons grouped by blocking rung, so the failure mix is a reportable table rather than free text.
+Failures are recorded against a **closed vocabulary** of 38 reasons grouped by blocking rung, so the failure mix is a reportable table rather than free text.
 
 ## Install
 
@@ -32,15 +32,34 @@ Failures are recorded against a **closed vocabulary** of 37 reasons grouped by b
 pip install -e ".[dev]"
 ```
 
+The ladder executes each artifact inside a container. Build the base image first:
+
+```bash
+docker build -t exec-repro-base:1 .
+```
+
+The image is `python:3.11-slim` plus `git`, `build-essential` and `pkg-config`,
+and no Python packages. Those three are not optional conveniences: without `git`
+a `git+https://` requirement cannot install, and without a compiler no wheel can
+be built from source, so a slimmer image silently converts artifacts that work
+into artifacts that appear broken. Repositories are cloned in full rather than
+shallowly for the same reason: `--depth 1` fetches no tags, and `setuptools-scm`
+then cannot derive a version.
+
 ## Use
 
 ```bash
 # 1. build a corpus (arXiv q-fin, ML-filtered, merged with an existing seed)
+# --per-category caps the depth of each query; the published corpus was not
+# harvested to exhaustion (the arXiv API throttled the deepening pass).
 exec-repro discover --out corpus/corpus.jsonl --seed corpus/seed_corpus.jsonl --per-category 300
 
 # 2. walk it up the ladder (parallel, resumable)
 exec-repro run --corpus corpus/corpus.jsonl --results results/ladder.jsonl \
-               --workdir /Volumes/fast/scratch --only-with-url
+               --workdir ~/scratch --only-with-url
+# NOTE: the workdir must be a path your container runtime shares with its VM.
+# Under colima, /tmp is not shared; the harness detects the empty mount and
+# aborts rather than recording every repository as file-less.
 
 # 3. aggregate into the paper's tables
 exec-repro summarize --results results/ladder.jsonl
@@ -71,15 +90,15 @@ The backend used is recorded on every result, so analyses can state the isolatio
 PYTHONPATH=src python3 -m pytest tests/
 ```
 
-The URL-normalisation suite exists because a regression there silently corrupts the headline number: one stray trailing period turns a live repository into a "404".
+The URL-normalization suite exists because a regression there silently corrupts the headline number: one stray trailing period turns a live repository into a "404". It was extended after three repositories were scored as link rot because a flattened `\href{url}{text}` left `}{GitHub` fused to the address, which trailing-only stripping cannot remove. `paper/audit.py` now asserts that no stored URL contains markup residue.
 
 ## Honest scope
 
-- Code URLs are extracted from **abstracts**, not full texts, so the URL-present rate is a **lower bound** on true disclosure.
+- Code URLs are extracted from **abstracts and from the rendered full text**. In this corpus the full-text pass found 361 of the 459 URLs against 98 from abstracts alone, so abstract-only extraction understates disclosure by roughly four-fifths. The URL-present rate remains a lower bound, since a paper may release code without saying so anywhere we look.
 - arXiv over-represents preprint-friendly subfields; the corpus is "arXiv ML-finance", not "the ML-finance literature".
 - A repository that fails to run is not necessarily wrong. It is not *independently executable as released*, which is the property being measured.
 
-## Licence
+## License
 
 MIT (see `LICENSE`).
 

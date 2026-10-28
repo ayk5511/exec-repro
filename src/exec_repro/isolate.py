@@ -234,7 +234,19 @@ class DockerBackend:
 
     name = "docker"
 
-    def __init__(self, image: str = "python:3.11-slim") -> None:
+    #: Base image for every artefact container.
+    #:
+    #: `python:3.11-slim` alone ships neither `git` nor a C toolchain, so a
+    #: repository whose requirements name a `git+https://` dependency, or whose
+    #: wheel must be compiled, failed for a reason belonging to us rather than to
+    #: the artefact. Six records in an earlier campaign were classified as
+    #: dependency conflicts on exactly that basis. Since the study's own policy
+    #: is that harness defects are excluded from claims about the literature, the
+    #: image supplies what an ordinary reader's machine would have. It installs
+    #: no Python package: what a repository can install is the measurement.
+    DEFAULT_IMAGE = "exec-repro-base:1"
+
+    def __init__(self, image: str = DEFAULT_IMAGE) -> None:
         if shutil.which("docker") is None:
             raise RuntimeError("docker not available")
         self.image = image

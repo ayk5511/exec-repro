@@ -16,12 +16,12 @@ anomaly literature under uniform methodology and find much of it does not
 survive. These studies concern the durability of findings under new data or
 stricter statistics. They are not about whether the original code runs.
 
-A second strand asks whether an artefact is \emph{documented} well enough that
+A second strand asks whether an artifact is \emph{documented} well enough that
 reproduction is possible in principle. \citet{GundersenKjensmo2018} score
 artificial-intelligence papers on documentation dimensions and find most
-underspecified; the \citet{PineauReproducibility2021} NeurIPS programme turned
+underspecified; the \citet{PineauReproducibility2021} NeurIPS program turned
 similar concerns into submission-time policy, introducing checklists and
-artefact-availability expectations at a major venue. Instruments in this family,
+artifact-availability expectations at a major venue. Instruments in this family,
 including the disclosure rubric applied to machine-learning finance by
 \citet{Khan2026Survey} and the audit-trail dimensions of
 \citet{Khan2026MrAudit}, are scored by reading the paper and inspecting the
@@ -29,7 +29,7 @@ repository. They are cheap enough to apply at corpus scale, and they measure
 disclosure.
 
 The third question, and the one this paper takes up, is whether the released
-artefact \emph{executes}. It sits between the other two: passing it is neither
+artifact \emph{executes}. It sits between the other two: passing it is neither
 necessary nor sufficient for a finding to be true, but failing it means no reader
 can check the finding without reimplementing the work. The engineering literature
 explains why this is hard even for competent authors.
@@ -40,18 +40,29 @@ executability without anyone touching it.
 
 \subsection{Execution-based studies}\label{sec:exec_studies}
 
-Two lines of work already run published code, and the present study is defined by
-how it differs from each.
+Several lines of work already run published code. Two are closest to ours in
+method and in subject, and the present study is defined by how it differs from
+each; the remainder matter because they bound what can honestly be claimed as new
+here.
 
 The first is at scale but outside finance. \citet{Trisovic2022} took more than
 2,000 replication datasets from the Harvard Dataverse, comprising over 9,000 R
 files, and executed them in a clean environment: 74\% of files failed on first
 execution, falling to 56\% after automated code cleaning. That is the closest
 methodological relative to what we do, and it establishes that large-scale
-unassisted execution is both feasible and informative. It is confined to R and to
-deposited replication packages rather than to repositories advertised in papers,
-and it reports a single failure rate rather than locating where in the pipeline
-the failure occurred.
+unassisted execution is both feasible and informative. It is also more
+finely reported than a single rate: it defines ten research questions, separates
+outcomes into a five-category error taxonomy, and breaks the re-execution rate
+down by journal collection, by R version and year, and by research field.
+
+Two things distinguish our setting. Its artifacts are replication packages
+deposited in a curated archive, which a depositor prepared for that purpose,
+rather than whatever address a paper offers its readers; and its error taxonomy
+is organized by R-language error type, so while retrieval is separated and
+quantified, environment declaration and environment construction are not scored
+as distinct stages but handled as a code-cleaning step that installs missing
+libraries. Those two stages are where most of our attrition occurs, which is why
+we score them separately rather than repairing past them.
 
 The second is in finance but under very different conditions.
 \citet{Perignon2024} ran the code of 168 research teams answering six
@@ -63,12 +74,59 @@ participating teams for the purpose, the raw data were supplied, and the study
 was coordinated. Those are precisely the conditions an ordinary reader of a
 published paper does not have.
 
-Computer science has also institutionalised artefact evaluation at systems and
-security venues, where committees run submitted artefacts and report substantial
-attrition between what is advertised and what builds. That work is a human,
-pass/fail judgement made by a reviewer who may correspond with the authors, which
-makes it stronger evidence about an individual artefact and weaker evidence about
-a distribution.
+Two further studies bear directly on what is new here, and both predate us by
+several years. \citet{Collberg2015}, published in shorter form as
+\citet{CollbergProebsting2016}, took 601 papers from eight ACM conferences and
+five journals, identified 402 whose results were backed by code, and attempted to
+obtain and build it. They report an explicitly ordered three-level result, their
+levels A, B and C: code was obtained and built within thirty minutes for 32.3\%
+of papers (A), built with additional effort for 48.3\% (B), and either built by
+them or asserted buildable by the authors for 54.0\% (C). The levels are nested,
+so each rate is a prefix of the next. An ordered, cumulative scale for build
+success is therefore not new, and we do not claim it. Their level A is moreover
+framed explicitly as the condition in which communicating with the author is not
+possible, which makes 32.3\% the closest prior figure to a cold-start
+measurement. Two things still separate it from ours. Author email
+was part of how code was \emph{located}, so a paper whose repository was
+unreachable could still enter the sample once an author supplied the address,
+whereas an unreachable address ends the attempt here. And their ladder stops at
+the build: it does not ask whether the artifact then executes, emits output, or
+reproduces a published number, which is where most of our remaining attrition
+occurs.
+
+\citet{Pimentel2019} executed 788,781 Jupyter notebooks drawn from a corpus of
+1,159,166, and report a two-stage funnel rather than a single rate: 24.11\%
+executed without exceptions, and 4.03\% additionally reproduced the results
+stored in the notebook. That is the closest precedent for separating \emph{ran}
+from \emph{matched}, on a scale far larger than ours, though the artifacts are
+notebooks harvested from GitHub rather than the code a published paper points its
+readers to, and the two stages are not decomposed into where in the pipeline an
+artifact stopped.
+
+Economics has run the closest analog to our experiment, and its result is worth
+sitting beside ours. \citet{Gertler2018} took 415 articles published in nine
+leading economics journals in a single month, identified 203 empirical papers
+without proprietary or restricted data, downloaded what the journals held, and
+tried to execute it, allowing up to four hours per paper. Estimation code was the
+file most often supplied, and it ran in 40\% of the cases where it was present;
+they reproduced the published tables and figures from estimation data for 37\% of
+studies, and from raw data for 14\%.
+
+The difference from our setting is the source of the artifact rather than the
+discipline. Their files come from a journal's archive, deposited under an
+editorial policy by an author who knew an editor would look, and a human
+replicator worked on each for up to four hours. Ours come from whatever address
+the paper printed, and nothing is repaired by hand. Read together, the two
+suggest that most of what an archive supplies is not the code but the conditions
+around it.
+
+Computer science has also institutionalized artifact evaluation at systems and
+security venues, where committees run submitted artifacts and report substantial
+attrition between what is advertised and what builds. That work is a human
+judgment made by a reviewer who may correspond with the authors, which makes it
+stronger evidence about an individual artifact and weaker evidence about a
+distribution. Ordered tiers exist there too, in the form of badge schemes, but
+they are awarded by people rather than decided mechanically.
 
 \subsection{What is new here}\label{sec:novelty}
 
@@ -76,16 +134,54 @@ The gap this paper fills is the unassisted, cold-start case in finance: not code
 supplied for a coordinated study with data attached, but whatever a published
 paper points a reader to, retrieved from that pointer, on a clean machine, with
 no data supplied and no author contact. Read against \citet{Perignon2024}, the
-question is not whether finance code reproduces under favourable conditions, but
-how much of that 52\% survives the removal of the favourable conditions.
+question is not whether finance code reproduces under favorable conditions, but
+how much of that 52\% survives the removal of the favorable conditions.
 
-Three things are new. The ladder supplies an ordered scale where the literature
-has used pass/fail or a single rate, so attrition becomes a curve with a
-diagnosable shape rather than one number: our result is not simply that little
-runs, but that most of the loss occurs at environment declaration and
-construction rather than at link rot or at execution itself. The closed failure
-vocabulary makes the \emph{reasons} a reportable table rather than a narrative.
-And the harness is released as an instrument, which matters because the quantity
-decays: a corpus scored today will score lower in two years as packages are
-yanked and repositories are archived, and a study that cannot be re-run cannot
-track that.
+What is new is narrower than an ordered scale, and it is worth being exact about
+which part, because ordered scales for reproducibility are neither rare nor
+recent. \citet{Vandewalle2009} defined six degrees running from ``cannot be
+reproduced'' to ``reproduced in fifteen minutes with free tools'' and applied
+them to 134 signal-processing papers. \citet{Peng2011} set out a five-point
+spectrum from publication alone to full replication. The ACM artifact-badging
+policy distinguishes cumulative levels within its Artifacts Evaluated family
+\citep{ACMBadging2020}. \citet{Collberg2015} graded build success at three
+levels, and \citet{Pimentel2019} separated execution from output agreement.
+Closest of all in shape, the ACRE guide's ten-point scale runs from no artifact
+available, through an artifact that fails to run, to one that reproduces the
+published display item \citep{ACREGuide}, which is the same axis and the same
+terminal condition as ours.
+
+We therefore claim no novelty for ordinality, for cumulativeness, or for ending
+at a numeric match. Those exist.
+
+What we have not found elsewhere is a scale of this kind that is decided
+\emph{mechanically}. Every scheme above is assigned by a person: reviewers in
+\citet{Vandewalle2009}, an associate editor in the kite-mark system
+\citet{Peng2011} describes, an evaluation committee under
+\citep{ACMBadging2020}, a trained reproducer under \citep{ACREGuide}. Their
+upper levels turn on judgments such as ``considerable effort'' or ``extreme
+effort'', which are informative about an artifact and hard to compare across
+scorers. Our rungs 2 to 9 are decided by a program with no human in the loop, so
+the same corpus yields the same curve for anyone who runs it \emph{at the same
+moment}, and the scale can be applied to hundreds of artifacts rather than to the
+dozens a committee can review. The qualification is not rhetorical: the harness
+clones a default branch and resolves dependencies against a live package index,
+so it removes the scorer from the measurement but not the date, and
+\Cref{sec:limitations} treats the resulting timestamp as a limitation rather than
+a detail.
+
+Three further properties travel with that. Retrieval, environment declaration,
+environment construction and execution are separate rungs rather than a single
+build step, so the loss can be located. Each failure carries a reason from a
+closed vocabulary tied to the rung that blocked it, so the mix is a table rather
+than a narrative. And the whole thing is applied cold, from the address a
+published paper gives its readers, with no data supplied and no author contact. That last condition is what separates this from \citet{Collberg2015},
+who emailed authors, and from \citet{Perignon2024}, who had the teams and the
+data.
+
+The consequence is a curve with a diagnosable shape rather than one number: the
+result is not simply that little runs, but that most of the loss occurs at
+environment declaration and construction rather than at link rot or at execution
+itself. The harness is released as an instrument because the quantity is not
+stable: repositories are archived and packages are yanked, and a study that
+cannot be re-run cannot tell decay from a difference in cohort.

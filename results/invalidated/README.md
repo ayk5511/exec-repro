@@ -40,3 +40,24 @@ Two defects affected execution:
    belong in that category.
 
 Superseded by `ladder_v3.jsonl`.
+
+## ladder_v6_SUPERSEDED_bare_make_entrypoint.jsonl
+
+The campaign as scored after the container image and clone-depth corrections but
+before the entry-point rule was tightened to require a named `make` target.
+
+Retained because it is the evidence for one of the defects the paper reports
+against itself. Record `2402.18485` advertises `github.com/pyecharts/pyecharts`,
+a third-party charting library, and appears here at rung 9 with the entry point
+`readme:make`. Its captured output is the Makefile's own usage message:
+
+    Please use `make <target>` where <target> is one of
+      test        -- run local unit tests
+      build       -- build the package
+
+A bare `make` runs whatever the Makefile's first target happens to be, which
+contradicts the documented rule that a README command must name a target. The
+rule is now enforced, and the record sits at rung 7 in the current results.
+
+This file supersedes nothing that was ever published; it exists so that the
+defect the paper describes can be checked rather than taken on trust.

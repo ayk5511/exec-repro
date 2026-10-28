@@ -210,6 +210,7 @@ def apply_scores(
     scored_rows = json.loads(worksheet_path.read_text())
     by_key = {r.key: r for r in results}
     scored = matched = 0
+    skipped: list[str] = []
     for row in scored_rows:
         verdict = (row.get("verdict") or "").strip().lower()
         if not verdict:
@@ -221,6 +222,16 @@ def apply_scores(
         result = by_key.get(row["key"])
         if result is None:
             continue
+        # Rung 10 asks whether an emitted number matches the paper, which is only
+        # a meaningful question of an artefact that emitted something. A verdict
+        # scored under one specification must not leak onto a run where the
+        # artefact never got that far: doing so attached an
+        # `output_not_comparable` verdict to a record that had already failed at
+        # rung 8 with a timeout, which reads as an adjudication that never
+        # happened.
+        if int(result.highest_rung) < int(Rung.PRODUCES_OUTPUT):
+            skipped.append(row["key"])
+            continue
         scored += 1
         cleared = VERDICTS[verdict]
         result.record(
@@ -228,8 +239,19 @@ def apply_scores(
                 Rung.MATCHES_PUBLISHED,
                 cleared,
                 None if cleared else VERDICT_REASONS[verdict],
-                (row.get("justification") or "")[:400],
+                # Not truncated. A rung-10 justification is the evidence for
+                # the paper's single headline success; cutting it produced a
+                # released record ending "...was not verified, because" while
+                # the worksheet it was derived from said the opposite. The
+                # audit now asserts the two agree, which only holds if the
+                # full text is carried through.
+                row.get("justification") or "",
             )
         )
         matched += int(cleared)
+    if skipped:
+        print(
+            f"rung10: skipped {len(skipped)} worksheet row(s) whose record did not "
+            f"reach PRODUCES_OUTPUT under this specification: {sorted(skipped)}"
+        )
     return scored, matched

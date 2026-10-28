@@ -42,3 +42,7 @@ scratch_*/
 workdir/
 .exec_repro_venv/
 corpus/corpus.backup.jsonl
+
+# Local backups of rescored results; the previous versions are in git history.
+*.pre_rescore
+*.v5backup

@@ -10,7 +10,7 @@ complete but whose dependencies no longer resolve both lose the same point, and
 the aggregate number cannot tell the two apart. The remedies differ completely:
 one is a hosting problem, the other is a packaging problem.
 
-An ordered ladder keeps that information. Each artefact is pushed as far as it
+An ordered ladder keeps that information. Each artifact is pushed as far as it
 will go, and what we record is the rung at which it stopped together with the
 reason it stopped. Because the rungs are cumulative, reaching rung $n$ implies
 every rung below $n$ was cleared, so the statement ``$x\%$ of papers clear rung
@@ -46,7 +46,7 @@ for a headline number and is scored only on a manually curated subset.}
 6  & \texttt{ENV\_BUILDS}        & those dependencies actually resolve and install \\
 7  & \texttt{ENTRYPOINT\_FOUND}  & a runnable entry point is identifiable \\
 8  & \texttt{RUNS}               & the entry point completes with exit code 0 in budget \\
-9  & \texttt{PRODUCES\_OUTPUT}   & execution emits artefacts or numeric output \\
+9  & \texttt{PRODUCES\_OUTPUT}   & execution emits artifacts or numeric output \\
 10 & \texttt{MATCHES\_PUBLISHED} & an emitted number matches a headline number \\
 \bottomrule
 \end{tabular}
@@ -72,15 +72,16 @@ network is available there.
 
 \subsection{A closed vocabulary for failures}\label{sec:reasons}
 
-Recording \emph{that} an artefact failed at rung 6 is less useful than recording
+Recording \emph{that} an artifact failed at rung 6 is less useful than recording
 \emph{why}. Free-text error capture makes that unaggregatable, so each rung
 carries a fixed set of admissible reasons and the data structure refuses any
 value outside it. The result is that the failure mix at each rung is a table.
 
 The vocabulary separates causes that call for different responses. At rung 6, for
 instance, \texttt{package\_not\_found} (a dependency has left the index),
-\texttt{python\_version\_unsupported} (the pin has aged out of the supported
-range), and \texttt{build\_from\_source\_failed} (a wheel is unavailable for the
+\texttt{python\_\allowbreak version\_\allowbreak unsupported} (the pin has aged
+out of the supported range), and
+\texttt{build\_\allowbreak from\_\allowbreak source\_\allowbreak failed} (a wheel is unavailable for the
 platform) are distinct, and only the first is really about the paper's own
 choices.
 
@@ -122,13 +123,24 @@ pipeline, since those cannot be reproducibly parsed.
 Both routes exclude directories whose contents are never the analysis: test
 suites, example folders, documentation, and vendored dependencies. That exclusion
 is not hypothetical tidiness. Two repositories in this corpus ship a copy of a
-Chinese-tokenisation library, and its bundled \texttt{test/demo.py} satisfied the
+Chinese-tokenization library, and its bundled \texttt{test/demo.py} satisfied the
 naming heuristic; the harness executed the library's demo and recorded its output
 as though the paper's pipeline had produced it. Both were counted at the top of
 the ladder until the outputs were read and found to be identical to each other
 and unrelated to either paper. Running a repository's tests is also not running
 its analysis, which is why a documented \texttt{pytest} invocation is refused as
 an entry point.
+
+The exclusion is weaker than that principle implies, and the gap is worth stating
+rather than leaving for a reader to find. It operates on directory names and on
+the literal \texttt{pytest} command, not on file names, so a test script sitting
+at the repository root remains selectable. Nine of the 71 entry points found
+under the primary specification are test artifacts of this kind, including two of
+the seven repositories that reach the top of the ladder. We report the
+consequence in \Cref{sec:rung10_results} rather than tightening the rule
+retroactively: it is the clearest evidence in the study that clearing rung 9 is a
+weaker achievement than its name suggests, and suppressing it would have made the
+harness look better and the finding weaker.
 
 Both configurations are run over the whole corpus and both curves are reported
 (\Cref{sec:sensitivity}). Neither matches a determined human who would read the
@@ -141,7 +153,7 @@ paper's.
 
 \subsection{What the ladder does not measure}\label{sec:ladder_limits}
 
-An artefact that stops low on the ladder is not thereby wrong. It is not
+An artifact that stops low on the ladder is not thereby wrong. It is not
 independently executable as released, on a current platform, within our time
 budget, by a reader who did not write it. That is a narrower claim than
 ``irreproducible'' and it is the only claim the instrument supports. Conversely,

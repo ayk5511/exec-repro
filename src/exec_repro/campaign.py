@@ -92,6 +92,7 @@ def load_results(results_path: Path) -> list[LadderResult]:
                 code_url=d.get("code_url"),
                 entrypoint_source=d.get("entrypoint_source"),
                 run_stdout=d.get("run_stdout", ""),
+                url_repaired_from=d.get("url_repaired_from"),
             )
             for s in d.get("stages", []):
                 r.stages.append(

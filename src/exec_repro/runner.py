@@ -99,8 +99,26 @@ class HarnessConfigError(RuntimeError):
 #: Trailing characters that come from prose extraction, not from the URL itself.
 #: Left uncleaned these produce spurious 404s and would overstate link rot, so
 #: normalisation happens before any rung is scored and is reported as a
-#: preprocessing step in the paper.
+#: preprocessing step in the paper. Two of the three repositories affected in the
+#: v5 campaign are live once the residue is removed; the third is genuinely gone
+#: and stays counted as rot on its cleaned address.
 _URL_TRAILING_JUNK = ".,;:)]}>'\"\\"
+
+#: Characters that cannot appear unescaped in an http(s) URL, so their first
+#: occurrence marks where markup residue begins rather than part of the address.
+#: The dominant source is a LaTeX \href{url}{text} flattened during PDF text
+#: extraction, which yields "https://github.com/org/repo}{GitHub". Trailing-only
+#: stripping cannot remove this, because the string ends in a letter. Three
+#: repositories in the v5 campaign were recorded as http_404 for this reason
+#: alone and are live; not cutting here overstates link rot.
+_URL_CUT_CHARS = "{}\\<>\"`| \t\n"
+
+#: A sentence period fused to the following word, e.g. ".../DeepLearningQHedging.The".
+#: A period is legal inside a repository name, so this cannot be stripped
+#: unconditionally: the candidate is only adopted if it is verified to resolve
+#: (see `repair_candidates`). Guessing here would understate link rot in exactly
+#: the way an unstripped artefact overstates it.
+_URL_FUSED_SENTENCE = re.compile(r"^(.*?)\.[A-Z][A-Za-z]*$")
 
 
 def normalize_url(url: str) -> str:
@@ -111,10 +129,15 @@ def normalize_url(url: str) -> str:
     suffixes (`/tree/main`, `.git`, `/blob/...`) that are not clone targets.
     """
     u = url.strip()
-    while u and u[-1] in _URL_TRAILING_JUNK:
-        u = u[:-1]
     while u and u[0] in "([{<'\"\\":
         u = u[1:]
+    # Cut at the first character that cannot occur in a URL. Must precede the
+    # trailing-junk loop: "repo}{GitHub" ends in a letter, so trailing stripping
+    # alone leaves the residue in place and the address 404s.
+    cut = min((i for i, ch in enumerate(u) if ch in _URL_CUT_CHARS), default=len(u))
+    u = u[:cut]
+    while u and u[-1] in _URL_TRAILING_JUNK:
+        u = u[:-1]
     u = u.rstrip("/")
     # Reduce a GitHub web URL to its clonable repository root.
     m = re.match(r"(https?://(?:www\.)?github\.com/[^/]+/[^/]+)", u, re.I)
@@ -123,6 +146,27 @@ def normalize_url(url: str) -> str:
         if u.lower().endswith(".git"):
             u = u[:-4]
     return u
+
+
+def repair_candidates(url: str) -> list[str]:
+    """Lexically plausible corrections for a URL that did not resolve.
+
+    Extraction defects and genuine link rot are indistinguishable by status
+    code: both answer 404. They are different claims, though. Rot is a fact
+    about the literature; a mangled address is a fact about our extractor, and
+    reporting the second as the first inflates the headline number.
+
+    Every candidate here is ambiguous by construction, so none is adopted on
+    lexical grounds alone: the caller retrieves each and keeps one only if it
+    resolves. That asymmetry is deliberate. An unstripped artefact overstates
+    link rot; an over-eager strip understates it, which is the worse error in a
+    paper arguing that artefacts decay.
+    """
+    out: list[str] = []
+    m = _URL_FUSED_SENTENCE.match(url)
+    if m and m.group(1).count("/") >= 4:
+        out.append(m.group(1))
+    return out
 
 
 _T = TypeVar("_T")
@@ -227,8 +271,22 @@ def _check_url_once(url: str, timeout: int) -> tuple[bool, str | None, str]:
         return False, "host_gone", f"{type(exc).__name__}: {exc}"
 
 
-def clone(url: str, dest: Path, timeout: int = 600, depth: int = 1) -> tuple[bool, str | None, str]:
-    """Rung 4: shallow-clone the repository."""
+def clone(url: str, dest: Path, timeout: int = 600, depth: int = 0) -> tuple[bool, str | None, str]:
+    """Rung 4: clone the repository. `depth=0` means a full clone.
+
+    Cloning shallow is the obvious optimisation and it silently corrupted the
+    measurement. `git clone --depth 1` fetches no tags, and a package whose
+    version is derived by `setuptools-scm` then fails to install with
+    "unable to detect version", which the installer reports as a dependency
+    problem. Seven repositories in the v5 campaign were recorded as failing to
+    build for that reason alone. The failure belonged to our clone flag, not to
+    the artefact, and the study's own policy is that harness defects are excluded
+    from claims about the literature.
+
+    A reader following the paper's URL clones normally and gets the tags, so
+    that is what we do. The cost is bandwidth; each repository is deleted after
+    scoring, so peak disk is unchanged.
+    """
     if dest.exists():
         shutil.rmtree(dest, ignore_errors=True)
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -237,7 +295,8 @@ def clone(url: str, dest: Path, timeout: int = 600, depth: int = 1) -> tuple[boo
         raise HarnessConfigError("git not found on PATH; cannot clone repositories")
     try:
         proc = subprocess.run(
-            [git, "clone", "--depth", str(depth), "--quiet", url, str(dest)],
+            [git, "clone", *(["--depth", str(depth)] if depth else []),
+             "--quiet", url, str(dest)],
             capture_output=True, text=True, timeout=timeout, check=False,
             # Inherit the environment so git finds its helpers, but never let it
             # prompt for credentials: a private repo must fail fast rather than
@@ -275,6 +334,15 @@ README_NAMES = ("README.md", "README.rst", "README.txt", "README", "readme.md")
 #: Commands that appear in a README but set up an environment rather than run
 #: the analysis. Treating one of these as the entry point would measure
 #: installation a second time.
+#: Make targets that exercise or package the code rather than producing the
+#: paper's result. Excluded on the same principle as a documented `pytest`
+#: invocation: running a repository's tests is not running its analysis.
+_NON_ANALYSIS_MAKE_TARGETS = frozenset({
+    "test", "tests", "check", "lint", "format", "fmt", "typecheck",
+    "build", "dist", "clean", "install", "uninstall", "docs", "doc",
+    "help", "all", "release", "publish", "coverage",
+})
+
 _SETUP_COMMAND_MARKERS = (
     "pip install", "pip3 install", "conda create", "conda install", "conda env",
     "git clone", "apt-get", "brew install", "npm install", "poetry install",
@@ -374,8 +442,24 @@ def entrypoint_from_readme(repo: Path) -> Entrypoint | None:
                 return Entrypoint([parts[0], target], "readme", line)
             continue
 
-        if parts[0] == "make" and (repo / "Makefile").is_file():
-            return Entrypoint(parts[:2] if len(parts) > 1 else ["make"], "readme", line)
+        if parts[0] == "make":
+            # A bare `make` runs whatever the Makefile's first target happens to
+            # be, which contradicts the rule stated just above: the command must
+            # name a target. In one corpus repository the default target printed
+            # the Makefile's own usage message, and the harness recorded that as
+            # the artefact producing output. Require an explicit target, require
+            # it to be declared in the Makefile, and refuse the housekeeping
+            # targets for the same reason a documented `pytest` is refused.
+            makefile = repo / "Makefile"
+            if len(parts) < 2 or not makefile.is_file():
+                continue
+            target = parts[1]
+            if target in _NON_ANALYSIS_MAKE_TARGETS:
+                continue
+            declared = re.compile(rf"^{re.escape(target)}\s*:", re.M)
+            if not declared.search(makefile.read_text(errors="replace")):
+                continue
+            return Entrypoint(["make", target], "readme", line)
     return None
 
 
@@ -468,6 +552,19 @@ def run_ladder(
 
     # ---- Rung 3: link rot --------------------------------------------------
     (ok, reason, detail), dt = _timed(check_url, code_url)
+    if not ok and reason == "http_404":
+        # Before recording rot, test whether the address is merely mangled.
+        # Only a candidate that actually resolves is adopted, so this can
+        # convert a false 404 into a live repository but can never manufacture
+        # one: an unresolvable candidate leaves the original verdict standing.
+        for candidate in repair_candidates(code_url):
+            (c_ok, c_reason, c_detail), c_dt = _timed(check_url, candidate)
+            if c_ok:
+                result.url_repaired_from = code_url
+                code_url = candidate
+                result.code_url = candidate
+                ok, reason, detail, dt = c_ok, c_reason, c_detail, dt + c_dt
+                break
     result.record(StageOutcome(Rung.URL_RESOLVES, ok, reason, detail, dt))
     if not ok:
         return result

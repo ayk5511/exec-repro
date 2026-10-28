@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import pytest
 
+from exec_repro import runner
 from exec_repro.isolate import RunResult
 from exec_repro.runner import (
     _classify_install_failure,
@@ -272,3 +273,135 @@ def test_check_url_gives_up_after_repeated_transport_failures(monkeypatch) -> No
     monkeypatch.setattr(runner.time, "sleep", lambda *_: None)
     cleared, reason, _ = runner.check_url("https://example.invalid/x")
     assert not cleared and reason == "dns_failure"
+
+
+# --- Regression: markup residue in extracted URLs -------------------------
+# Three v5 records were recorded http_404 solely because a flattened
+# \href{url}{text} left "}{GitHub" fused to the address. All three are live.
+# Reporting our extraction defect as the literature's link rot inflated the
+# headline rot figure, in the same subsection that claimed normalisation had
+# eliminated exactly this failure.
+
+
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        (
+            "https://github.com/Open-Finance-Lab/AgenticTrading}{GitHub",
+            "https://github.com/Open-Finance-Lab/AgenticTrading",
+        ),
+        (
+            "https://github.com/org/repo}{GitHub repository}",
+            "https://github.com/org/repo",
+        ),
+        ("https://github.com/org/repo\\footnotemark", "https://github.com/org/repo"),
+        ("https://github.com/org/repo<br>", "https://github.com/org/repo"),
+    ],
+)
+def test_normalize_url_cuts_markup_residue(raw: str, expected: str) -> None:
+    assert normalize_url(raw) == expected
+
+
+def test_normalize_url_keeps_a_period_inside_a_repo_name() -> None:
+    """A period is legal in a repository name, so it must not be cut blindly.
+
+    ".The" is a fused sentence period in one corpus record, but ".js" and ".py"
+    are real repository names. Disambiguating needs retrieval, not lexing, which
+    is why this case is handled by verified repair rather than here.
+    """
+    assert (
+        normalize_url("https://github.com/janrems/DeepLearningQHedging.The")
+        == "https://github.com/janrems/DeepLearningQHedging.The"
+    )
+    assert normalize_url("https://github.com/org/vue.js") == "https://github.com/org/vue.js"
+
+
+def test_repair_candidates_offers_the_fused_sentence_form() -> None:
+    assert runner.repair_candidates("https://github.com/janrems/DeepLearningQHedging.The") == [
+        "https://github.com/janrems/DeepLearningQHedging"
+    ]
+
+
+def test_repair_candidates_declines_to_strip_a_bare_host() -> None:
+    """Never propose a repair that would climb above the repository root."""
+    assert runner.repair_candidates("https://github.com/Org") == []
+
+
+def test_repair_is_adopted_only_when_it_resolves(monkeypatch, tmp_path) -> None:
+    """A candidate that also 404s must leave the original verdict standing.
+
+    The asymmetry is the point: an unverified repair would convert measured link
+    rot into a spurious live repository, understating decay in a paper whose
+    subject is decay.
+    """
+    seen: list[str] = []
+
+    def only_repaired_resolves(url: str, timeout: int = 20, **kw):
+        seen.append(url)
+        if url.endswith("DeepLearningQHedging"):
+            return True, None, "http_200"
+        return False, "http_404", "http_404"
+
+    monkeypatch.setattr(runner, "check_url", only_repaired_resolves)
+    monkeypatch.setattr(runner, "clone", lambda u, r: (False, "clone_timeout", "stub"))
+
+    res = runner.run_ladder(
+        "k",
+        "https://github.com/janrems/DeepLearningQHedging.The",
+        tmp_path,
+        backend=None,  # type: ignore[arg-type]
+    )
+    assert res.url_repaired_from == "https://github.com/janrems/DeepLearningQHedging.The"
+    assert res.code_url == "https://github.com/janrems/DeepLearningQHedging"
+    assert int(res.highest_rung) >= 3
+
+
+def test_unrepairable_404_stays_link_rot(monkeypatch, tmp_path) -> None:
+    monkeypatch.setattr(
+        runner, "check_url", lambda u, timeout=20, **kw: (False, "http_404", "http_404")
+    )
+    res = runner.run_ladder("k", "https://github.com/org/gone.The", tmp_path, backend=None)  # type: ignore[arg-type]
+    assert res.url_repaired_from is None
+    assert res.block_reason == "http_404"
+
+
+# --- Regression: a bare `make` is not an entry point ----------------------
+# One corpus repository documented "make" in its README. The default target
+# printed the Makefile's own usage text, and the harness scored that as the
+# artefact producing output at rung 9. The documented rule has always been that
+# a README command must name a target that exists; the code did not enforce it.
+
+
+def _repo_with_makefile(tmp_path, readme_cmd: str, makefile: str):
+    repo = tmp_path / "r"
+    repo.mkdir()
+    (repo / "README.md").write_text(f"## Usage\n\n```\n{readme_cmd}\n```\n")
+    (repo / "Makefile").write_text(makefile)
+    return repo
+
+
+def test_bare_make_is_rejected(tmp_path) -> None:
+    repo = _repo_with_makefile(tmp_path, "make", "help:\n\t@echo usage\n")
+    assert runner.entrypoint_from_readme(repo) is None
+
+
+def test_make_with_undeclared_target_is_rejected(tmp_path) -> None:
+    repo = _repo_with_makefile(tmp_path, "make experiment", "help:\n\t@echo usage\n")
+    assert runner.entrypoint_from_readme(repo) is None
+
+
+def test_make_housekeeping_targets_are_rejected(tmp_path) -> None:
+    for target in ("test", "lint", "build", "clean", "docs"):
+        sub = tmp_path / target
+        sub.mkdir()
+        repo = _repo_with_makefile(sub, f"make {target}", f"{target}:\n\t@echo x\n")
+        assert runner.entrypoint_from_readme(repo) is None, target
+
+
+def test_make_with_a_declared_analysis_target_is_accepted(tmp_path) -> None:
+    repo = _repo_with_makefile(
+        tmp_path, "make experiment", "experiment:\n\tpython run.py\n"
+    )
+    ep = runner.entrypoint_from_readme(repo)
+    assert ep is not None
+    assert ep.argv == ["make", "experiment"]

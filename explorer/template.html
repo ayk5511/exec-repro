@@ -1,0 +1,440 @@
+<title>Does It Actually Run?</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  /* Palette note: no red/green pass-fail scale anywhere on this page.
+     The study's central claim is that an artifact which does not run is not
+     thereby wrong, and a traffic-light palette would contradict that in the
+     first second of looking. Depth on the ladder is encoded instead as one
+     hue ramp from pale (everyone clears it) to saturated (almost nobody does). */
+  :root {
+    --ground:      #F6F4F0;
+    --surface:     #FFFFFF;
+    --surface-alt: #EFEBE4;
+    --ink:         #1B1E22;
+    --ink-soft:    #565C63;
+    --ink-faint:   #8A9098;
+    --rule:        #DCD6CC;
+    --accent:      #1F5451;
+    --accent-soft: #E3EDEB;
+    --rare:        #9C6B1E;
+
+    --r2: #D9D2C6;
+    --r3: #BFC4B8;
+    --r4: #9FB4AB;
+    --r5: #7CA39E;
+    --r6: #589391;
+    --r7: #3C7C7A;
+    --r8: #2A6664;
+    --r9: #1F5451;
+
+    --shell: 1140px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #15171A;
+      --surface:     #1D2024;
+      --surface-alt: #23272C;
+      --ink:         #E9E6E0;
+      --ink-soft:    #A8AEB6;
+      --ink-faint:   #757C85;
+      --rule:        #2F343A;
+      --accent:      #6FB5B0;
+      --accent-soft: #1E2E2E;
+      --rare:        #D9A24E;
+
+      --r2: #3A3832;
+      --r3: #47514A;
+      --r4: #52685F;
+      --r5: #5C8078;
+      --r6: #629692;
+      --r7: #6FAEA9;
+      --r8: #7EC0BA;
+      --r9: #8FD2CB;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:      #15171A;
+    --surface:     #1D2024;
+    --surface-alt: #23272C;
+    --ink:         #E9E6E0;
+    --ink-soft:    #A8AEB6;
+    --ink-faint:   #757C85;
+    --rule:        #2F343A;
+    --accent:      #6FB5B0;
+    --accent-soft: #1E2E2E;
+    --rare:        #D9A24E;
+
+    --r2: #3A3832;
+    --r3: #47514A;
+    --r4: #52685F;
+    --r5: #5C8078;
+    --r6: #629692;
+    --r7: #6FAEA9;
+    --r8: #7EC0BA;
+    --r9: #8FD2CB;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell { max-width: var(--shell); margin: 0 auto; padding-inline: 20px; }
+
+  header.masthead { padding-block: 44px 28px; border-bottom: 1px solid var(--rule); }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 14px;
+  }
+  h1 {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: clamp(30px, 5vw, 46px); font-weight: 600; line-height: 1.08;
+    margin: 0 0 14px; text-wrap: balance; letter-spacing: -.015em;
+  }
+  .standfirst {
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 17px; line-height: 1.6; color: var(--ink-soft);
+    max-width: 63ch; margin: 0;
+  }
+
+  /* ---- the curve is the thesis, so it opens the page ---- */
+  .curve { padding-block: 32px; border-bottom: 1px solid var(--rule); }
+  .curve h2, .panel h2 {
+    font-size: 12px; font-family: "IBM Plex Mono", monospace;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 18px; font-weight: 500;
+  }
+  .ladder { display: flex; flex-direction: column; gap: 5px; }
+  .step {
+    display: grid; grid-template-columns: 200px 1fr 118px;
+    align-items: center; gap: 14px;
+  }
+  .step-name {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px;
+    color: var(--ink-soft); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .step-track { background: var(--surface-alt); height: 26px; border-radius: 2px; overflow: hidden; }
+  .step-fill { height: 100%; border-radius: 2px; transition: width .5s cubic-bezier(.2,.7,.3,1); }
+  .step-val {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+    text-align: right; font-variant-numeric: tabular-nums; color: var(--ink);
+  }
+  .step-val span { color: var(--ink-faint); }
+
+  /* ---- search ---- */
+  .panel { padding-block: 28px; }
+  .searchrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  input[type="search"] {
+    flex: 1 1 320px; min-width: 0;
+    font-family: "IBM Plex Mono", monospace; font-size: 14px;
+    padding: 12px 14px; border: 1px solid var(--rule); border-radius: 3px;
+    background: var(--surface); color: var(--ink);
+  }
+  input[type="search"]:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  select {
+    font-family: "IBM Plex Sans", sans-serif; font-size: 13px;
+    padding: 11px 12px; border: 1px solid var(--rule); border-radius: 3px;
+    background: var(--surface); color: var(--ink);
+  }
+  .count {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px;
+    color: var(--ink-faint); margin: 14px 0 0; font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- records ---- */
+  ul.records { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+  li.rec { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  .rec-head {
+    display: grid; grid-template-columns: 8px 1fr auto; gap: 14px;
+    align-items: start; padding: 13px 15px; cursor: pointer;
+  }
+  .rec-stripe { width: 8px; height: 100%; min-height: 34px; border-radius: 2px; }
+  .rec-title {
+    font-family: "Source Serif 4", Georgia, serif; font-size: 15.5px;
+    line-height: 1.35; margin: 0 0 5px; color: var(--ink);
+  }
+  .rec-meta {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px;
+    color: var(--ink-faint); display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .rec-rung {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    text-align: right; white-space: nowrap; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .rec-body {
+    padding: 0 15px 15px 37px; border-top: 1px solid var(--rule);
+    margin-top: 0; padding-top: 13px;
+  }
+  .rec-body p {
+    font-family: "Source Serif 4", Georgia, serif; font-size: 14.5px;
+    line-height: 1.6; color: var(--ink-soft); margin: 0 0 10px; max-width: 70ch;
+  }
+  .kv { display: grid; grid-template-columns: 148px 1fr; gap: 5px 14px; font-size: 12.5px; }
+  .kv dt {
+    font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    color: var(--ink-faint); text-transform: uppercase; letter-spacing: .06em;
+  }
+  .kv dd { margin: 0; font-family: "IBM Plex Mono", monospace; color: var(--ink); word-break: break-all; }
+  .kv dd a { color: var(--accent); }
+  .badge-match {
+    display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 10.5px;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--rare);
+    border: 1px solid var(--rare); border-radius: 2px; padding: 1px 6px; margin-left: 8px;
+  }
+
+  /* ---- the caveat is load-bearing, not fine print ---- */
+  .caveat {
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    padding: 20px 22px; border-radius: 0 3px 3px 0; margin-block: 30px;
+  }
+  .caveat h2 {
+    font-family: "IBM Plex Sans", sans-serif; font-size: 14px; font-weight: 600;
+    margin: 0 0 9px; color: var(--ink); letter-spacing: 0; text-transform: none;
+  }
+  .caveat p {
+    font-family: "Source Serif 4", Georgia, serif; font-size: 14.5px;
+    line-height: 1.62; color: var(--ink-soft); margin: 0 0 9px; max-width: 72ch;
+  }
+  .caveat p:last-child { margin-bottom: 0; }
+
+  footer {
+    border-top: 1px solid var(--rule); margin-top: 36px;
+    padding-block: 24px 48px;
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--ink-faint);
+  }
+  footer a { color: var(--accent); }
+  .empty {
+    font-family: "Source Serif 4", Georgia, serif; font-size: 15px;
+    color: var(--ink-soft); padding: 32px 0;
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media (max-width: 680px) {
+    .step { grid-template-columns: 1fr; gap: 3px; }
+    .step-val { text-align: left; }
+    .kv { grid-template-columns: 1fr; }
+    .rec-body { padding-left: 15px; }
+  }
+</style>
+
+<div class="shell">
+  <header class="masthead">
+    <p class="eyebrow">Companion data &middot; 459 artifacts &middot; scored <span id="scored-on"></span></p>
+    <h1>Does it actually run?</h1>
+    <p class="standfirst">
+      Every arXiv quantitative-finance machine-learning paper in this corpus that
+      advertises a code repository, and what happened when a stranger cloned that
+      address on a clean machine, installed the dependencies it declared, and ran
+      the entry point it documented. No data supplied. No author contacted.
+    </p>
+  </header>
+
+  <section class="curve">
+    <h2>Where the corpus stops</h2>
+    <div class="ladder" id="ladder"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Find a paper</h2>
+    <div class="searchrow">
+      <input type="search" id="q" placeholder="arXiv id, title, or repository" autocomplete="off">
+      <select id="f-rung"><option value="">Stopped at any rung</option></select>
+      <select id="f-reason"><option value="">Any reason</option></select>
+      <select id="f-year"><option value="">Any year</option></select>
+    </div>
+    <p class="count" id="count"></p>
+    <ul class="records" id="records"></ul>
+  </section>
+
+  <section class="caveat">
+    <h2>What a record here does and does not say</h2>
+    <p id="caveat-text"></p>
+    <p>
+      If your paper is listed and the result looks wrong, it may well be. The
+      harness is released so the run can be repeated and disputed, and four
+      defects in it were found and corrected before these figures were produced.
+      Corrections are welcome as issues on the repository.
+    </p>
+  </section>
+
+  <footer class="shell" style="padding-inline:0">
+    <span id="foot"></span>
+  </footer>
+</div>
+
+<script id="payload" type="application/json">__DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("payload").textContent);
+  var recs = D.records, meta = D.meta, rungs = D.rungs, reasons = D.reasons;
+  var N = recs.length;
+
+  document.getElementById("scored-on").textContent = meta.scored_on;
+  document.getElementById("caveat-text").textContent = meta.caveat;
+  document.getElementById("foot").innerHTML =
+    'Harness and full records: <a href="' + meta.repo + '">' + meta.repo.replace(/^https:\/\//, "") +
+    '</a> &middot; commit <code>' + meta.harness_commit + '</code> &middot; n=' + N;
+
+  function rungColor(r) { return "var(--r" + Math.min(Math.max(r, 2), 9) + ")"; }
+
+  // ---- attrition curve -------------------------------------------------
+  var ladder = document.getElementById("ladder"), frag = document.createDocumentFragment();
+  [2, 3, 4, 5, 6, 7, 8, 9].forEach(function (r) {
+    var n = recs.filter(function (x) { return x.rung >= r; }).length;
+    var pct = (100 * n / N);
+    var row = document.createElement("div");
+    row.className = "step";
+    row.innerHTML =
+      '<div class="step-name">' + r + ' &middot; ' + rungs[r].name + '</div>' +
+      '<div class="step-track"><div class="step-fill" style="width:' + pct.toFixed(1) +
+      '%;background:' + rungColor(r) + '"></div></div>' +
+      '<div class="step-val">' + n + ' <span>/ ' + pct.toFixed(1) + '%</span></div>';
+    row.title = rungs[r].gloss;
+    frag.appendChild(row);
+  });
+  ladder.appendChild(frag);
+
+  // ---- filters ---------------------------------------------------------
+  function fill(sel, items, label) {
+    items.forEach(function (v) {
+      var o = document.createElement("option");
+      o.value = v; o.textContent = label ? label(v) : v;
+      sel.appendChild(o);
+    });
+  }
+  var stopRungs = [];
+  for (var r = 2; r <= 9; r++) {
+    if (recs.some(function (x) { return x.rung === r; })) stopRungs.push(r);
+  }
+  fill(document.getElementById("f-rung"), stopRungs, function (v) {
+    // Rung 9 is the top of the mechanical ladder, so a record sitting there did
+    // not stop short of anything a program decided; calling it "stopped" would
+    // misdescribe the seven artifacts the study is actually about.
+    return v === 9
+      ? "Cleared every mechanical rung"
+      : "Stopped at " + v + " · " + rungs[v].name;
+  });
+  var usedReasons = Object.keys(reasons).filter(function (k) {
+    return recs.some(function (x) { return x.reason === k; });
+  }).sort();
+  fill(document.getElementById("f-reason"), usedReasons);
+  var years = Array.from(new Set(recs.map(function (x) { return x.year; })
+    .filter(Boolean))).sort();
+  fill(document.getElementById("f-year"), years);
+
+  // ---- rendering -------------------------------------------------------
+  var listEl = document.getElementById("records"), countEl = document.getElementById("count");
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function card(x) {
+    var li = document.createElement("li");
+    li.className = "rec";
+    var matched = x.adjudication && x.adjudication.verdict === "match";
+    var head = document.createElement("div");
+    head.className = "rec-head";
+    head.setAttribute("role", "button");
+    head.setAttribute("tabindex", "0");
+    head.setAttribute("aria-expanded", "false");
+    head.innerHTML =
+      '<div class="rec-stripe" style="background:' + rungColor(x.rung) + '"></div>' +
+      '<div><p class="rec-title">' + esc(x.title || x.key) +
+        (matched ? '<span class="badge-match">reproduced a table</span>' : '') + '</p>' +
+        '<div class="rec-meta"><span>' + esc(x.key) + '</span>' +
+        (x.year ? '<span>' + x.year + '</span>' : '') +
+        (x.reason ? '<span>' + esc(x.reason) + '</span>' : '<span>cleared every mechanical rung</span>') +
+        '</div></div>' +
+      '<div class="rec-rung">reached ' + x.rung + '<br>' + esc(x.rung_name) + '</div>';
+
+    var body = document.createElement("div");
+    body.className = "rec-body";
+    body.hidden = true;
+    var repo = x.url
+      ? '<a href="' + esc(x.url) + '" rel="noopener">' + esc(x.url.replace(/^https?:\/\//, "")) + '</a>'
+      : "&mdash;";
+    body.innerHTML =
+      (x.reason ? '<p>' + esc(reasons[x.reason] || x.reason) + '</p>' : '') +
+      (x.adjudication ? '<p><strong>Rung 10, scored by hand:</strong> ' +
+        esc(x.adjudication.justification) + '</p>' : '') +
+      '<dl class="kv">' +
+      '<dt>arXiv</dt><dd><a href="https://arxiv.org/abs/' + esc(x.key) + '" rel="noopener">' + esc(x.key) + '</a></dd>' +
+      '<dt>Repository</dt><dd>' + repo + '</dd>' +
+      '<dt>URL found in</dt><dd>' + esc(x.url_source || "unknown") + '</dd>' +
+      '<dt>Entry point via</dt><dd>' + esc(x.entrypoint_source || "none identified") + '</dd>' +
+      '<dt>Strict rule</dt><dd>reached rung ' + esc(x.rung_conservative) + '</dd>' +
+      '<dt>Wall clock</dt><dd>' + esc(x.seconds) + ' s</dd>' +
+      (x.repaired_from ? '<dt>Address repaired</dt><dd>' + esc(x.repaired_from) + '</dd>' : '') +
+      '</dl>';
+
+    function toggle() {
+      body.hidden = !body.hidden;
+      head.setAttribute("aria-expanded", String(!body.hidden));
+    }
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+    });
+    li.appendChild(head); li.appendChild(body);
+    return li;
+  }
+
+  var LIMIT = 60;
+  function render() {
+    var q = document.getElementById("q").value.trim().toLowerCase();
+    var fr = document.getElementById("f-rung").value;
+    var fa = document.getElementById("f-reason").value;
+    var fy = document.getElementById("f-year").value;
+
+    var out = recs.filter(function (x) {
+      if (fr && String(x.rung) !== fr) return false;
+      if (fa && x.reason !== fa) return false;
+      if (fy && String(x.year) !== fy) return false;
+      if (!q) return true;
+      return (x.key + " " + (x.title || "") + " " + (x.url || "")).toLowerCase().indexOf(q) !== -1;
+    });
+
+    listEl.textContent = "";
+    countEl.textContent = out.length === N
+      ? N + " artifacts"
+      : out.length + " of " + N + " artifacts";
+
+    if (!out.length) {
+      var p = document.createElement("p");
+      p.className = "empty";
+      p.textContent = "No artifact in the corpus matches that. The corpus is arXiv "
+        + "quantitative-finance machine learning, so a paper outside that scope will not appear.";
+      listEl.appendChild(p);
+      return;
+    }
+    var shown = out.slice(0, LIMIT), f = document.createDocumentFragment();
+    shown.forEach(function (x) { f.appendChild(card(x)); });
+    listEl.appendChild(f);
+    if (out.length > LIMIT) {
+      var more = document.createElement("p");
+      more.className = "count";
+      more.textContent = "Showing the first " + LIMIT + ". Narrow the search to see the rest.";
+      listEl.appendChild(more);
+    }
+  }
+
+  ["q", "f-rung", "f-reason", "f-year"].forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener(id === "q" ? "input" : "change", render);
+  });
+  render();
+})();
+</script>

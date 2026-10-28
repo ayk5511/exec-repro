@@ -13,7 +13,7 @@ to score at scale, they are useful, and they are not the same thing as being abl
 to run the code.
 
 The gap matters because the two can diverge in both directions. A paper can
-disclose exemplary metadata, a repository link, a licence, a
+disclose exemplary metadata, a repository link, a license, a
 \texttt{requirements.txt}, and still be unusable, because the pinned dependencies
 no longer resolve, because the entry point expects a data file that was never
 shipped, or because the repository was deleted after publication. Conversely a
@@ -31,19 +31,22 @@ This paper measures the cold-start case. We take a corpus of machine-learning pa
 quantitative finance, extract every code URL the authors advertise, and attempt
 to run what we find: resolve the link, clone the repository, build the declared
 environment inside a container, locate an entry point, and execute it under a
-fixed time budget. What we record for each artefact is the furthest point it
+fixed time budget. What we record for each artifact is the furthest point it
 reached and the reason it stopped.
 
 \subsection{The instrument}\label{sec:intro_instrument}
 
-Our first contribution is the measurement design itself. Reproducibility is
-usually reported as a score, which conflates failures with nothing in common: a
-deleted repository and an unresolvable dependency both cost a point, and the
-aggregate cannot distinguish a hosting problem from a packaging problem. We
-instead use an ordered, cumulative ladder of eleven rungs
+Our first contribution is the measurement design itself. Ordered scales for
+artifact quality are not new, and \Cref{sec:novelty} sets out the ones that
+precede us; what they have in common is that a person assigns the level. A score
+assigned by a reader also conflates failures with nothing in common when it is
+reduced to an aggregate: a deleted repository and an unresolvable dependency both
+cost a point, and the total cannot distinguish a hosting problem from a packaging
+problem. We use an ordered, cumulative ladder of eleven rungs, decided by a
+program rather than a reader,
 (\Cref{sec:ladder}), running from ``the paper makes no code-availability
 claim'' to ``an emitted number matches the paper's headline result''. Each
-artefact is pushed as far as it will go; the distribution of stopping points is
+artifact is pushed as far as it will go; the distribution of stopping points is
 the attrition curve, and the reasons for stopping form a second, orthogonal
 table.
 
@@ -52,7 +55,7 @@ cumulative, the curve is monotone by construction, and a violation of
 monotonicity is a detectable scoring inconsistency rather than a quirk of the
 data; the audit script checks it on every build. Because failure reasons are
 drawn from a closed vocabulary rather than free text, the failure mix at each
-rung is itself reportable, so we can say not only how many artefacts stopped at
+rung is itself reportable, so we can say not only how many artifacts stopped at
 environment construction but what fraction of those were caused by a package
 disappearing from the index rather than by a version pin that has aged out.
 
@@ -62,9 +65,9 @@ A study of this kind carries an unusual risk: a defect in the harness produces a
 number that looks like a finding. The failure modes are not hypothetical. During
 development, a container backend that started a fresh container for the install
 step and another for the execution step produced a clean, plausible result in
-which no artefact in the corpus executed at all; every dependency installed in
+which no artifact in the corpus executed at all; every dependency installed in
 the first container had been discarded before the second one ran. The number was
-publishable-looking and entirely an artefact of our own code. It was caught
+publishable-looking and entirely an artifact of our own code. It was caught
 because the failures took a tenth of a second, which is not how real
 machine-learning code fails.
 
